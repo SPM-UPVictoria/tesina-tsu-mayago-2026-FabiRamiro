@@ -1,0 +1,582 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper,left=2.25cm,top=3.0cm,right=2.25cm,bottom=2.0cm, headsep=1.5cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,mexico]{babel}
+%\usepackage[letterpaper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{graphicx}
+\usepackage{longtable}
+
+\usepackage[linguistics]{forest}
+\usepackage{amssymb, amsmath, amsbsy} % simbolitos
+
+
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{subcaption}
+%\usepackage{parskip}
+\usepackage[skip=12pt plus1pt]{parskip}
+\usepackage{pdfpages} % Incluir PDF en documento en LATEX
+\usepackage{verbatim} % comentarios
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{array,booktabs,ragged2e}
+\usepackage{rotating}
+%\usepackage{hyperref}
+\usepackage{wallpaper}
+% \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}} % Centrar }
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+
+
+% Para utilizar el formato de citas IEEE y comentar los dos parrafos siguientes. Ademas de utilizar el comando \cite en vez de \cite
+\usepackage[backend=biber,sorting=none]{biblatex}
+% Para utilizar el formato APA, sugiero comentar la linea anterior y descomentar las dos proximas lineas. Ademas de utilizar el comando \cite en vez de \cite
+%\usepackage[backend=biber,style=apa]{biblatex}
+%\DeclareLanguageMapping{english}{american-apa}
+
+\makeatletter
+\DefineBibliographyExtras{spanish}{%
+  \setcounter{smartand}{1}%
+  \let\lbx@finalnamedelim=\lbx@es@smartand
+  \let\lbx@finallistdelim=\lbx@es@smartand
+}
+\renewbibmacro*{name:delim:apa:family-given}[1]{%
+  \ifnumgreater{\value{listcount}}{\value{liststart}}
+    {\ifboolexpr{
+       test {\ifnumless{\value{listcount}}{\value{liststop}}}
+       or
+       test \ifmorenames
+     }
+       {\printdelim{multinamedelim}}
+       {\lbx@finalnamedelim{#1}}}
+    {}}
+\makeatother
+% Estas lineas permiten romper los hipervinculos muy largos en las referencias!!!!
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
+\addbibresource{Referencias.bib} % ARCHIVO DE BIBLIOGRAFÍA
+
+
+\usepackage[bookmarks=true,breaklinks=true,bookmarksopen=false,colorlinks=true,linkcolor=blue]{hyperref}
+\usepackage[hyphenbreaks]{breakurl}
+\usepackage{pdfpages} % Incluir PDF en documento en LATEX
+\setstretch{1.3}
+
+\usepackage{soul}
+
+
+% CONSTANTES NECESARIAS PARA EL DOCUMENTO ---> MODIFIQUEN A SU CRITERIO
+\newcommand{\NombreAlumno}{Michael Jackson Perez Black}
+\soulregister{\NombreAlumno}{1}
+% NUNCA PONGAN EL TITULO EN MAYUSCULAS!!
+\newcommand{\NombreProyecto}{Notificación de actualizaciones de la información en un sistema de información web de pacientes hospitalizados a sus familiares del Sagrado Corazón de Jesus } 
+% Noten los \\ para insertar un ENTER del texto en el encabezado. NUNCA PONGAN EL TITULO EN MAYUSCULAS!!
+\newcommand{\NombreProyectoheader}{Notificación de actualizaciones de la información \\en un sistema de información web de pacientes\\ hospitalizados a sus familiares del Sagrado Corazón de Jesus}
+\newcommand{\NombreTSU}{Desarrollo de Software Multiplataforma}
+\newcommand{\UnidadEconomica}{Departamento de Psiquiatría Homeopática, Hospital San Jose Bonaventura}
+\newcommand{\nasesorempresaria}   {Dr. Shawn Murphy}
+\newcommand{\nasesorinstitucional}{Dr. Said Polanco Martagón}
+\newcommand{\Matricula}           {1730505}  %SU MATRICULA
+\newcommand{\ncuatrimestre}{Mayo-Agosto 2026}
+% ESTA ES LA FECHA EN LA QUE EL ASESOR INSTITUCIONA EVALUA EL INFORME
+\newcommand{\fechaAutorizacionInforme}               {31 de Julio de 2026} 
+% ESTA ES LA FECHA EN LA QUE EL ASESOR INSTITUCIONA PROGRAMA LA EXPOSCION 
+\newcommand{\DiaEvaluacionPesentacion}{12}
+\newcommand{\MesEvaluacionPesentacion}{Agosto}
+\newcommand{\AnhoEvaluacionPesentacion}{2026}
+\newcommand{\fechaPortada}               {\MesEvaluacionPesentacion~de~\AnhoEvaluacionPesentacion}
+\newcommand{\HoraEvaluacionPesentacion}{10:00 hrs}
+
+\newcommand{\modalidadEvaluacionPesentacion}{Presencial} % Otras opciones: Virtual
+\newcommand{\tipoAulaOficinaEnlacePesentacion}{la Oficina} % Otras opciones: la oficia/el aula/enlace
+\newcommand{\AulaEvaluacionOEnlaceMeetPesentacion}{I-XXX69} %otras opciones: si es un elance de meet, rodearlo \url{}
+
+%\newcommand{\modalidadEvaluacionPesentacion}{Virtual} % Otras opciones: Virtual
+%\newcommand{\tipoAulaOficinaEnlacePesentacion}{el enlace} % Otras opciones: la oficia/el aula/el enlace
+%\newcommand{\AulaEvaluacionOEnlaceMeetPesentacion}{\url{http://www.upvictoria.edu.mx}} %otras opciones: si es un elance de meet, rodearlo \url{}
+
+\newcommand{\ncarrera}            {Ingeniería en Tecnologías de la Información e Innovación Digital}
+
+
+\fancyhead{} % Clear all header fields
+\fancyhead[C]{%
+    \begin{tabular}{@{} m{0.2\textwidth} m{0.5\textwidth} m{0.2\textwidth} @{}}
+        % Left image
+        \includegraphics[height=1.20cm]{UTYP.png}
+        &
+        % Center text (multiline, centered)
+        \centering
+        \scriptsize{\NombreProyectoheader}
+        %\textbf{University Name} \\ 
+        %Department of Something \\ 
+        %Course Title
+        &
+        % Right image
+        %\raggedleft
+        \includegraphics[height=1.5cm]{LogoUPV_2023.png}
+    \end{tabular}
+}
+
+
+%\usepackage{imakeidx}
+%\makeindex[title=New Index Title]
+
+%\renewcommand{\contentsname}{Whatever}
+%
+
+%\usepackage[english]{babel}
+
+\addto\captionsspanish{% Replace "english" with the language you use
+  \renewcommand{\contentsname}%
+    {Contenido temático}%
+}
+
+
+\renewcommand\spanishtablename{Tabla}
+
+\begin{document}
+
+% PAGINA 1 - PORTADA
+\setcounter{page}{0}
+\pagenumbering{roman}
+\thispagestyle{empty}
+
+
+
+
+\begin{titlepage}
+
+
+\vspace*{-2cm}
+\begin{center}
+\begin{tabular}{cp{6cm}c}
+\includegraphics[height=2.25cm]{UTYP.png} & 
+& \includegraphics[height=2.25cm]{LogoUPV_2023.png}   \\
+\end{tabular} \\[0.5cm]
+
+
+
+{\Large \textbf{UNIVERSIDAD POLITÉCNICA DE VICTORIA}}\\[1.0cm]
+
+{\Large \textbf{REPORTE DE ACTIVIDADES DEL PROYECTO}}\\[0.75cm]
+
+{\Large \MakeUppercase{\NombreProyecto}}\\[1.0cm]
+
+QUE PRESENTA
+
+\textbf{\MakeUppercase{\NombreAlumno}}\\[1.0cm]
+
+EN CUMPLIMIENTO DE LA ESTADÍA TSU EN\\
+\textbf{\MakeUppercase{\NombreTSU}}\\[0.75cm]
+
+ASESOR INSTITUCIONAL\\
+\textbf{\MakeUppercase{\nasesorinstitucional}}\\[0.5cm]
+
+UNIDAD ECONÓMICA RECEPTORA:\\
+\textbf{\MakeUppercase{\UnidadEconomica}}\\[0.5cm]
+
+ASESOR DE LA UNIDAD ECONÓMICA\\
+\textbf{\MakeUppercase{\nasesorempresaria}}\\[0.5cm]
+
+
+\end{center}
+\begin{flushright}
+Ciudad Victoria, Tamaulipas, \fechaPortada.
+\end{flushright}
+
+\end{titlepage}
+
+
+\newpage
+% PAGINA 1 - PORTADA
+\setcounter{page}{0}
+\pagenumbering{roman}
+\pagestyle{empty}
+\ULCornerWallPaper{1}{Membrete2023.pdf}
+\vspace*{2cm}
+
+
+
+\begin{center}
+{\Large \textbf{Formato de autorización para exposición de Estadía de}}\\[0.125cm]
+{\Large \textbf{Técnico Superior Universitario}}\\[0.25cm]
+\end{center}
+
+\noindent
+Fecha y lugar en que se emite: \textbf{Ciudad Victoria, Tamaulipas, a \fechaAutorizacionInforme } \\[0.125cm]
+Nombre completo del estudiante: \textbf{\NombreAlumno} \\[0.125cm]
+Matrícula: \textbf{\Matricula}  \\[0.125cm]
+Programa Académico: \textbf{\ncarrera}  \\[0.25cm]
+
+\noindent
+Por medio del presente, se le informa que tras realizar su Estadía en la empresa \textbf{\UnidadEconomica} llevando a cabo el proyecto: \textbf{\NombreProyecto}, durante el periodo comprendido \textbf{\ncuatrimestre} logrando una ponderación de \_\_\_\_  (60\% posibles) para el criterio de reporte; por lo tanto, se otorga la oportunidad de exponer el trabajo realizado por medio de un informe ejecutivo programado para el día \textbf{\DiaEvaluacionPesentacion} del mes de \textbf{\MesEvaluacionPesentacion} del año en curso en un horario de \textbf{\HoraEvaluacionPesentacion} en modalidad \textbf{\modalidadEvaluacionPesentacion} en \textbf{\tipoAulaOficinaEnlacePesentacion} \textbf{\AulaEvaluacionOEnlaceMeetPesentacion}.
+
+\vspace{0.25cm}
+
+\noindent
+Sin otro particular, se le recomienda estar disponible para iniciar su exposición 10 minutos antes de la indicación oficial.
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tabular}{p{10cm}}
+\multicolumn{1}{c}{Atentamente}   \\
+ \\
+ \\ \hline
+\multicolumn{1}{c}{\nasesorinstitucional}   \\
+\multicolumn{1}{c}{Asesor institucional}   \\
+\end{tabular}
+\end{center}
+
+\clearpage
+\ULCornerWallPaper{1}{Membrete2023.pdf}
+
+\vspace*{3cm}
+
+\begin{center}
+{\large \textbf{Control sumativo de Estadía para Técnico Superior Universitario}}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tabular}{|p{6cm}|p{4cm}|p{4cm}|}
+\hline
+\textbf{Criterio} & \textbf{Valor / Ponderación} & \textbf{Calificación} \\ \hline
+Reporte & 60\% & \\ \hline
+Exposición & 40\% & \\ \hline
+Calificación final & \multicolumn{2}{c|}{ } \\ \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.8cm}
+
+%\noindent
+%\textbf{Nota:} para completar este documento deberá sustentar su decisión con base en las rúbricas oficiales de la institución diseñadas para cada evaluación.
+
+\begin{center}
+\begin{tabular}{|p{10cm}|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Datos de la evaluación sumativa}}\\
+\multicolumn{1}{|c|}{Fecha: \textbf{\DiaEvaluacionPesentacion}  / \textbf{\MesEvaluacionPesentacion} / \textbf{\AnhoEvaluacionPesentacion}} \\ \hline
+%\multicolumn{1}{c}{Atentamente}   \\
+ \\
+ \\ \hline
+\multicolumn{1}{c}{\nasesorinstitucional}   \\
+\multicolumn{1}{c}{Asesor institucional}   \\
+\end{tabular}
+\end{center}
+
+
+
+
+
+%\vspace{1cm}
+
+%\noindent
+
+
+
+
+%\vspace{1.5cm}
+
+%\noindent
+%Firma: \hrulefill
+
+%\vspace{1cm}
+
+%\noindent
+%Nombre del Asesor institucional: \nasesorinstitucional \hrulefill
+
+
+\clearpage
+\ClearWallPaper
+\thispagestyle{fancy}
+\addcontentsline{toc}{section}{Resumen}
+%\vspace*{1cm}
+\section*{Resumen}
+
+El resumen es una representación condensada del contenido del documento. Su propósito es dar al lector un relato de las características principales del reporte. Su redacción es en tercera persona, en tiempo pasado, con escritura continua y sin tablas o imágenes. La extensión sugerida es no mayor a media página. Debe cumplir con las siguientes características:
+
+\begin{itemize}
+\item Se hace mención del nombre del proyecto como parte de la Estadía, el nombre de la unidad económica y su dirección completa.
+\item Se menciona el objetivo, meta, actividad o responsabilidad principal que se abordó.
+\item Se describe detalladamente la metodología desarrollada; tales como herramientas, materiales, equipos, cursos, softwares y conocimientos adquiridos en la universidad utilizados para alcanzar los objetivos empleados.
+\item Se describen detalladamente los resultados más importantes obtenidos.
+\item Se termina presentando conclusiones del trabajo.
+\end{itemize}
+
+
+\clearpage
+\thispagestyle{fancy}
+\addcontentsline{toc}{section}{Abstract}
+%\vspace*{1cm}
+\section*{Abstract}
+Add your abstract here...
+
+\clearpage
+%\renewcommand{\indexname}{Contenido temático}
+
+\thispagestyle{empty}
+\ClearWallPaper
+\tableofcontents
+
+
+%\chapter{Introducción}
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagestyle{fancy}
+
+\input{introduccion}
+
+%\chapter{Metodología}
+\clearpage
+\input{metodologia}
+
+\clearpage
+\input{resultados}
+
+\clearpage
+\input{conclusiones}
+
+%\clearpage
+%\section*{Bibliografía}
+%Agrega las referencias utilizadas.
+
+
+\clearpage
+%\Urlmuskip=0mu plus 1mu\relax
+\addcontentsline{toc}{section}{Bibliografía} 
+\printbibliography
+ 
+\clearpage
+\addcontentsline{toc}{section}{Anexos} 
+
+
+\thispagestyle{fancy}
+%\pagenumbering{roman}
+%\setcounter{page}{1}
+\includepdf[pages={1}]{documentosDigitalizados/SeguroFacultativo.pdf}
+
+% En las siguientes 3 paginas, debe incluir una digitalización de calidad de sus respectivas cartaas, no una fotografia toda cucha tomada con su celular de Coppel
+% Pagina 1: Digitalización de la carta de presentación (sustituir por una original en el empastado)
+\clearpage
+\thispagestyle{fancy}
+%\pagenumbering{roman}
+%\setcounter{page}{1}
+\includepdf[pages={1}]{documentosDigitalizados/CartaPresentacion.pdf}
+
+% Pagina 2: Digitalización de la carta de aceptación (sustituir por una original en el empastado)
+\clearpage
+\thispagestyle{fancy}
+\includepdf[pages={1}]{documentosDigitalizados/CartaAceptacion.pdf}
+
+% Pagina 3: Digitalización de la carta de liberación (sustituir por una original en el empastado)
+\clearpage
+\thispagestyle{fancy}
+\includepdf[pages={1}]{documentosDigitalizados/CartaLiberacion.pdf}
+
+%\chapter*{Rúbrica para la Evaluación del Reporte de Estadía}
+\clearpage
+%\section*{Rúbrica para la Evaluación del Reporte de Estadía}
+\newcommand{\SizeFont}{\footnotesize}
+
+\begin{center}
+\large {\textbf{Rúbrica para la Evaluación del Reporte de Estadía}}
+
+\begin{sidewaystable}
+\begin{longtable}{|p{0.5cm}|p{13cm}|p{1.5cm}|p{3cm}|}
+\hline
+%Fecha y lugar en que se emite: \textbf{Ciudad Victoria, Tamaulipas, a \fechaAutorizacionInforme } \\[0.125cm]
+\multicolumn{4}{|l|}{Nombre completo del estudiante: \textbf{\NombreAlumno} }\\
+\multicolumn{4}{|l|}{Matrícula:  \textbf{\Matricula}}  \\
+\multicolumn{4}{|l|}{PERIODO: \ncuatrimestre } \\
+\multicolumn{4}{|l|}{Nombre del evaluador: \nasesorinstitucional} \\
+\multicolumn{4}{|l|}{ } \\
+\multicolumn{4}{|l|}{Firma del Evaluador: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  }\\
+\multicolumn{4}{|l|}{Calificación Final: \_\_\_ / 100} \\ \hline
+Valor & Características a cumplir & Puntos & Observaciones \\ \hline
+\SizeFont 6 & \SizeFont Resumen ejecutivo y abstract: Indica qué se realizó, cómo se realizó y qué se obtuvo. (una cuartilla en español e inglés) & & \\ \hline
+\SizeFont 6 & \SizeFont Contenido temático: Describe correctamente el contenido del documento & & \\ \hline
+\SizeFont 6 & \SizeFont Introducción: El informe cumple con introducir al lector de una manera atractiva el panorama general del trabajo realizado en la unidad económica.  & & \\ \hline
+\SizeFont 6 & \SizeFont Descripción de la unidad económica: Se redactan los detalles de los antecedentes del departamento, la empresa, giro, misión, visión, infraestructura, ubicación. & & \\\hline
+\SizeFont 6 & \SizeFont Objetivos operativos: Describen las acciones a cumplir mediante actividades establecidas por el asesor empresarial & & \\ \hline
+\SizeFont 24 & \SizeFont Metodología: Descripción a detalle de las etapas y procedimientos utilizados en el proyecto & & \\ \hline
+\SizeFont 18 & \SizeFont Resultados: Interpreta y analiza los resultados obtenidos durante su estadía. & & \\ \hline
+\SizeFont 12 & \SizeFont Conclusiones: Las conclusiones son claras y acordes con el objetivo esperado & & \\ \hline
+\SizeFont 6 & \SizeFont Bibliografía y anexos: Cita correctamente las fuentes de información utilizando un estilo de referencia; anexa cartas correspondientes & & \\ \hline
+\SizeFont 10 & \SizeFont Responsabilidad: Entregó el reporte en la fecha y hora señalada. Asistió al menos al 80\% de sus días de Estadía & & \\ \hline
+\end{longtable}
+\end{sidewaystable}
+
+\end{center}
+
+%\chapter*{Rúbrica para Exposición}
+\clearpage
+\begin{center}
+\large {\textbf{Rúbrica para Exposición del Reporte de Estadía}}
+\end{center}
+
+
+\begin{longtable}{|p{3.75cm}|p{3.75cm}|p{3.75cm}|p{3.75cm}|}
+\hline
+ & \multicolumn{3}{c|}{Nivel de logro} \\ \hline
+%A &B  & C & D \\
+Criterio &  Bueno ( 10\% ) & Regular (7\% ) & Menor a lo esperado (5\%) \\ \hline
+\SizeFont Dominio del tema (10\%) & \SizeFont Utiliza todos los términos y conceptos de manera correcta. & \SizeFont Utiliza la mayoría términos y conceptos de manera correcta & \SizeFont Confunde los términos y conceptos. \\ \hline
+
+\SizeFont  Presentación de material visual (10\%) & \SizeFont Las  diapositivas usadas tienen fondo claro, letras, tablas e imágenes visibles. La presentación contiene los aspectos relevantes de la Estadía
+& \SizeFont Las  diapositivas usadas presentan dificultad para su apreciación visual. La presentación contiene los aspectos relevantes de la Estadía & \SizeFont Las  diapositivas usadas presentan dificultad para su apreciación visual. La presentación carece de algunos aspectos relevantes de la Estadía. \\ \hline
+
+\SizeFont   Comunicación y expresión (10\%)  & \SizeFont   Su volumen de voz es comprensible. Su expresión corporal manifiesta seguridad ejecutiva. Su atuendo cumple los estándares de ser formal o semiformal.  Mantiene una línea de respeto en general. &  \SizeFont   Su volumen de voz no es comprensible. Su expresión corporal manifiesta inseguridad. Su atuendo cumple los estándares de ser formal o semiformal.  Mantiene una línea de respeto en general. &
+\SizeFont  Su volumen de voz no es comprensible. Su expresión corporal manifiesta inseguridad. Su atuendo no cumple los estándares de ser formal o semiformal.  Realiza alguna falta de respeto. \\ \hline
+
+\SizeFont   Respuestas (10\%) & \SizeFont Las respuestas son consistentes y con parámetros de lógica operativa. & \SizeFont    Las respuestas no son consistentes pero tienen parámetros de lógica operativa. & \SizeFont    Las respuestas son difusas e incoherentes.  \\ \hline
+
+
+\multicolumn{2}{|c|}{\textbf{Ponderación final de su exposición:}} & \multicolumn{2}{c|}{\_\_\_ /100} \\ \hline
+%\multicolumn{2}{|c|}{Día / Mes / Año} &  \multicolumn{2}{c|}{\_\_\_\_ / \_\_\_\_\_\_\_\_ / \_\_\_\_  } \\  \hline
+\multicolumn{2}{|c|}{Día / Mes / Año} &  \multicolumn{2}{c|}{\DiaEvaluacionPesentacion / \MesEvaluacionPesentacion / \AnhoEvaluacionPesentacion} \\  \hline
+\multicolumn{2}{|c}{ }& \multicolumn{2}{|c|}{ }  \\
+\multicolumn{2}{|c}{ }& \multicolumn{2}{|c|}{ }  \\    
+\multicolumn{2}{|c}{Comentario adicional} & \multicolumn{2}{|c|}{ } \\  
+\multicolumn{2}{|c}{ }& \multicolumn{2}{|c|}{ }  \\  
+\multicolumn{2}{|c}{ }& \multicolumn{2}{|c|}{ }  \\  \hline
+
+
+
+\end{longtable}
+
+\end{document}
+
+
+
+
+
+
+
+
+\end{document}
+%\section*{Rúbrica para Exposición}
+%Completa aquí los criterios de dominio del tema, material visual, comunicación y respuestas.
+
+%\usepackage{longtable}
+%\usepackage{array}
+
+\begin{center}
+\textbf{RÚBRICA PARA LA EVALUACIÓN DEL REPORTE DE ESTADÍA}
+\end{center}
+
+\vspace{0.5cm}
+
+\noindent
+\textbf{NOMBRE DEL ESTUDIANTE:} NOMBRES Y APELLIDOS
+
+\noindent
+\textbf{PERIODO:} MAYO AGOSTO 2026
+
+\noindent
+\textbf{NOMBRE DEL EVALUADOR:} NOMBRES Y APELLIDOS
+
+\noindent
+\textbf{FIRMA DEL EVALUADOR:}
+
+\noindent
+\textbf{CALIFICACIÓN FINAL:} 60/100
+
+\vspace{0.5cm}
+
+\begin{longtable}{|c|C{7cm}|c|C{4cm}|}
+\hline
+\textbf{Valor} & \textbf{Características a cumplir} & \textbf{Puntos obtenidos} & \textbf{Observaciones} \\
+\hline
+6 & Resumen ejecutivo y abstract: Indica qué se realizó, cómo se realizó y qué se obtuvo. (una cuartilla en español e inglés) & & \\
+\hline
+6 & Contenido temático: Describe correctamente el contenido del documento & & \\
+\hline
+6 & Introducción: El informe cumple con introducir al lector de una manera atractiva el panorama general del trabajo realizado en la unidad económica. & & \\
+\hline
+6 & Descripción de la unidad económica: Se redactan los detalles de los antecedentes del departamento, la empresa, giro, misión, visión, infraestructura, ubicación. & & \\
+\hline
+6 & Objetivos operativos: Describen las acciones a cumplir mediante actividades establecidas por el asesor empresarial & & \\
+\hline
+24 & Metodología: Descripción a detalle de las etapas y procedimientos utilizados en el proyecto & & \\
+\hline
+18 & Resultados: Interpreta y analiza los resultados obtenidos durante su estadía. & & \\
+\hline
+12 & Conclusiones: Las conclusiones son claras y acordes con el objetivo esperado & & \\
+\hline
+6 & Bibliografía y anexos: Cita correctamente las fuentes de información utilizando un estilo de referencia; anexa cartas correspondientes & & \\
+\hline
+10 & Responsabilidad: Entregó el reporte en la fecha y hora señalada. Asistió al menos al 80\% de sus días de Estadía & & \\
+\hline
+\end{longtable}
+
+%\vspace{1cm}
+
+\clearpage
+\begin{center}
+\textbf{RÚBRICA PARA EXPOSICIÓN DEL REPORTE DE ESTADÍAS}
+\end{center}
+
+\begin{center}
+\textbf{Técnico Superior Universitario}
+\end{center}
+
+\vspace{0.5cm}
+\newcommand{\SizeFont}{\small}
+\begin{longtable}{|p{3cm}|p{4cm}|p{4cm}|p{4cm}|}
+\hline
+\textbf{Criterio} & \textbf{Bueno (10\%)} & \textbf{Regular (7\%)} & \textbf{Menor a lo esperado (5\%)} \\
+\hline
+Dominio del tema & Utiliza todos los términos y conceptos de manera correcta. & Utiliza la mayoría de los términos y conceptos de manera correcta. & Confunde los términos y conceptos. \\
+\hline
+Presentación de material visual & Las diapositivas tienen fondo claro, con elementos visibles y contienen aspectos relevantes. & Presentan dificultad visual pero incluyen aspectos relevantes. & Presentan dificultad visual y carecen de aspectos relevantes. \\
+\hline
+Comunicación y expresión & Voz comprensible, seguridad corporal, atuendo formal o semiformal y respeto. & Voz poco comprensible, inseguridad, pero mantiene formalidad. & Voz no comprensible, inseguridad, atuendo inadecuado o falta de respeto. \\
+\hline
+Respuestas & Respuestas consistentes con lógica operativa. & Respuestas poco consistentes pero con lógica. & Respuestas difusas e incoherentes. \\
+\hline
+\end{longtable}
+
+\vspace{0.5cm}
+
+\noindent
+\textbf{Ponderación final de su exposición:} 40/100
+
+\vspace{0.5cm}
+
+\noindent
+\textbf{Datos de la exposición y evaluación}
+
+\noindent
+Día / Mes / Año
+
+\noindent
+Comentario adicional
+
+\vspace{1cm}
+
+\noindent
+Firma \hspace{3cm} Nombre \hspace{3cm} Correo electrónico
+
+\vspace{0.5cm}
+
+\noindent
+Profesor asesor institucional
+
+\end{document}
