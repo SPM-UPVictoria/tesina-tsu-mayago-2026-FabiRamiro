@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber build/main"] 1779992487.15204 "build/main.bcf" "build/main.bbl" "build/main" 1779992904.96168 0
-  "build/main.bcf" 1779992904.87806 107748 d8d738799f1efb2b28e6a4185f6a92d2 "pdflatex"
+["biber build/main"] 1779992487.15204 "build/main.bcf" "build/main.bbl" "build/main" 1779993313.322 0
+  "build/main.bcf" 1779993313.23854 107748 d8d738799f1efb2b28e6a4185f6a92d2 "pdflatex"
   (generated)
   "build/main.bbl"
   "build/main.blg"
   (rewritten before read)
-["pdflatex"] 1779992903.73588 "/home/osvaldofrb/Documentos/Estadias/tesina-tsu-mayago-2026-FabiRamiro/main.tex" "build/main.pdf" "main" 1779992904.96186 0
-  "/home/osvaldofrb/Documentos/Estadias/tesina-tsu-mayago-2026-FabiRamiro/main.tex" 1779992888.5994 32045 4e8db5f8d625ce4380fff58ede53842b ""
+["pdflatex"] 1779993312.09494 "/home/osvaldofrb/Documentos/Estadias/tesina-tsu-mayago-2026-FabiRamiro/main.tex" "build/main.pdf" "main" 1779993313.32224 0
+  "/home/osvaldofrb/Documentos/Estadias/tesina-tsu-mayago-2026-FabiRamiro/main.tex" 1779993310.68037 32045 4e8db5f8d625ce4380fff58ede53842b ""
   "/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1775415801 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1775415801 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1775415801 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -260,19 +260,19 @@
   "LogoUPV_2023.png" 1779313094.69347 135292 9dc028ee986352f8e0c86763d6b399fc ""
   "Membrete2023.pdf" 1779313094.6966 259207 12c98cc2947acf63d1a72d52ce31a405 ""
   "UTYP.png" 1779313094.6966 37831 4ef8c60a90da178fa76c40dc51540bdf ""
-  "build/main.aux" 1779992904.87406 5753 f4e75e8b6d6ff4e40bb2903f097bb568 "pdflatex"
+  "build/main.aux" 1779993313.23354 5753 f4e75e8b6d6ff4e40bb2903f097bb568 "pdflatex"
   "build/main.bbl" 1779992487.68215 466 76d65a242ec496c9b4361af646ff12cb "biber build/main"
-  "build/main.out" 1779992904.87506 3720 9a79873faebb04703c619bc93e3e6af9 "pdflatex"
-  "build/main.run.xml" 1779992904.87969 2306 628e0087c61ee8036d936d14edcd02fc "pdflatex"
-  "build/main.toc" 1779992904.87969 1951 cbe00b8e21e4b72c0c1d974c351cbcbb "pdflatex"
+  "build/main.out" 1779993313.23554 3720 9a79873faebb04703c619bc93e3e6af9 "pdflatex"
+  "build/main.run.xml" 1779993313.24013 2306 628e0087c61ee8036d936d14edcd02fc "pdflatex"
+  "build/main.toc" 1779993313.24013 1951 cbe00b8e21e4b72c0c1d974c351cbcbb "pdflatex"
   "conclusiones.tex" 1779313094.6966 161 58c97b577cc4a7b765a6392283e7fd37 ""
-  "documentosDigitalizados/CartaAceptacion.pdf" 1779313094.6966 42727 77b78c5018a50c02ebc42cc6b66a9291 ""
+  "documentosDigitalizados/CartaAceptacion.pdf" 1779827862.8085 218127 bf03756521b112e04434b0e364d3f57c ""
   "documentosDigitalizados/CartaLiberacion.pdf" 1779313094.6982 37353 fe0e5803f869f1c1e00df142f69ca031 ""
-  "documentosDigitalizados/CartaPresentacion.pdf" 1779313094.6982 46612 771abe882bc1981f6482ed01c9fb13cc ""
-  "documentosDigitalizados/SeguroFacultativo.pdf" 1779313094.6982 14172 eb2e389a4a7b36ff0229f5663e919060 ""
+  "documentosDigitalizados/CartaPresentacion.pdf" 1779827877.88571 723274 79798fc43e447dca03ffab4aba0cb3f0 ""
+  "documentosDigitalizados/SeguroFacultativo.pdf" 1779827891.86091 133513 40dba0e21df503a6325cb18636cb3f92 ""
   "introduccion.tex" 1779992474.71663 7149 a7a61b42ded5e05dbeeeac0c8ca01847 ""
-  "main.tex" 1779992888.5994 32045 4e8db5f8d625ce4380fff58ede53842b ""
-  "metodologia.tex" 1779992902.31157 4544 168906d63e96354a92c6627156eff9dd ""
+  "main.tex" 1779993310.68037 32045 4e8db5f8d625ce4380fff58ede53842b ""
+  "metodologia.tex" 1779992950.50927 4544 168906d63e96354a92c6627156eff9dd ""
   "resultados.tex" 1779335918.33207 1079 e8ba91546eb2174282e987dca016f10e ""
   (generated)
   "build/main.aux"
