@@ -1,0 +1,319 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{Sistema:2018:Ivan}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=0e7391700c78d80b544872599602b115}{%
+           family={Garcia},
+           familyi={G\bibinitperiod},
+           given={Ivan},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{0e7391700c78d80b544872599602b115}
+      \strng{fullhash}{0e7391700c78d80b544872599602b115}
+      \strng{fullhashraw}{0e7391700c78d80b544872599602b115}
+      \strng{bibnamehash}{0e7391700c78d80b544872599602b115}
+      \strng{authorbibnamehash}{0e7391700c78d80b544872599602b115}
+      \strng{authornamehash}{0e7391700c78d80b544872599602b115}
+      \strng{authorfullhash}{0e7391700c78d80b544872599602b115}
+      \strng{authorfullhashraw}{0e7391700c78d80b544872599602b115}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.emprendepyme.net/que-es-un-sistema-de-informacion.html}}
+      \field{title}{¿Que es un sistema de información?-Definición de sistema de información}
+      \field{year}{2018}
+      \warn{\item misc entry 'Sistema:2018:Ivan' (Referencias.bib): Invalid format '28-11-2018' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{laudon2020}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=2a3d8893ad04ba3c98081349c47e2f6c}{%
+           family={Laudon},
+           familyi={L\bibinitperiod},
+           given={Kenneth\bibnamedelima C.},
+           giveni={K\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=7104f050b378ef23f0bc36c2b73e5ea2}{%
+           family={Laudon},
+           familyi={L\bibinitperiod},
+           given={Jane\bibnamedelima P.},
+           giveni={J\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pearson}%
+      }
+      \strng{namehash}{a99ce1573b42821945806f73f25db5a4}
+      \strng{fullhash}{a99ce1573b42821945806f73f25db5a4}
+      \strng{fullhashraw}{a99ce1573b42821945806f73f25db5a4}
+      \strng{bibnamehash}{a99ce1573b42821945806f73f25db5a4}
+      \strng{authorbibnamehash}{a99ce1573b42821945806f73f25db5a4}
+      \strng{authornamehash}{a99ce1573b42821945806f73f25db5a4}
+      \strng{authorfullhash}{a99ce1573b42821945806f73f25db5a4}
+      \strng{authorfullhashraw}{a99ce1573b42821945806f73f25db5a4}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{16}
+      \field{title}{Management Information Systems: Managing the Digital Firm}
+      \field{year}{2020}
+      \verb{doi}
+      \verb 10.5555/mitpress
+      \endverb
+    \endentry
+    \entry{stair2018}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=c303a69e2904de5b26c545a578671050}{%
+           family={Stair},
+           familyi={S\bibinitperiod},
+           given={Ralph},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f73315690d58d24cdee8ed857c163a08}{%
+           family={Reynolds},
+           familyi={R\bibinitperiod},
+           given={George},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cengage Learning}%
+      }
+      \strng{namehash}{9fd377970fb33bc09a57d0749b982599}
+      \strng{fullhash}{9fd377970fb33bc09a57d0749b982599}
+      \strng{fullhashraw}{9fd377970fb33bc09a57d0749b982599}
+      \strng{bibnamehash}{9fd377970fb33bc09a57d0749b982599}
+      \strng{authorbibnamehash}{9fd377970fb33bc09a57d0749b982599}
+      \strng{authornamehash}{9fd377970fb33bc09a57d0749b982599}
+      \strng{authorfullhash}{9fd377970fb33bc09a57d0749b982599}
+      \strng{authorfullhashraw}{9fd377970fb33bc09a57d0749b982599}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{13}
+      \field{title}{Principles of Information Systems}
+      \field{year}{2018}
+      \verb{doi}
+      \verb 10.1007/978-1-137-59048-9
+      \endverb
+    \endentry
+    \entry{turban2019}{book}{}{}
+      \name{author}{3}{}{%
+        {{hash=9b8fdb3166a87b5286b644c5bfcd0dfd}{%
+           family={Turban},
+           familyi={T\bibinitperiod},
+           given={Efraim},
+           giveni={E\bibinitperiod}}}%
+        {{hash=c16d8e74166ca5e93b70f9cdb8440b81}{%
+           family={Pollard},
+           familyi={P\bibinitperiod},
+           given={Carol},
+           giveni={C\bibinitperiod}}}%
+        {{hash=7dedc5d70bca6f166455e74fc268e527}{%
+           family={Wood},
+           familyi={W\bibinitperiod},
+           given={Gregory},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Wiley}%
+      }
+      \strng{namehash}{b2ae417fff4b84476940e7fc33a990a5}
+      \strng{fullhash}{b2ae417fff4b84476940e7fc33a990a5}
+      \strng{fullhashraw}{b2ae417fff4b84476940e7fc33a990a5}
+      \strng{bibnamehash}{b2ae417fff4b84476940e7fc33a990a5}
+      \strng{authorbibnamehash}{b2ae417fff4b84476940e7fc33a990a5}
+      \strng{authornamehash}{b2ae417fff4b84476940e7fc33a990a5}
+      \strng{authorfullhash}{b2ae417fff4b84476940e7fc33a990a5}
+      \strng{authorfullhashraw}{b2ae417fff4b84476940e7fc33a990a5}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{11}
+      \field{title}{Information Technology for Management}
+      \field{year}{2019}
+      \verb{doi}
+      \verb 10.1002/9781119563983
+      \endverb
+    \endentry
+    \entry{davenport2018}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=418715aadaf08f606ff3e5575fa44f4f}{%
+           family={Davenport},
+           familyi={D\bibinitperiod},
+           given={Thomas\bibnamedelima H.},
+           giveni={T\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=4b70fce1b7af67ccd08c351a63d99c65}{%
+           family={Ronanki},
+           familyi={R\bibinitperiod},
+           given={Rajeev},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{b1a1def5a04b82a913bee6308ec6e425}
+      \strng{fullhash}{b1a1def5a04b82a913bee6308ec6e425}
+      \strng{fullhashraw}{b1a1def5a04b82a913bee6308ec6e425}
+      \strng{bibnamehash}{b1a1def5a04b82a913bee6308ec6e425}
+      \strng{authorbibnamehash}{b1a1def5a04b82a913bee6308ec6e425}
+      \strng{authornamehash}{b1a1def5a04b82a913bee6308ec6e425}
+      \strng{authorfullhash}{b1a1def5a04b82a913bee6308ec6e425}
+      \strng{authorfullhashraw}{b1a1def5a04b82a913bee6308ec6e425}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Harvard Business Review}
+      \field{number}{1}
+      \field{title}{Artificial Intelligence for the Real World}
+      \field{volume}{96}
+      \field{year}{2018}
+      \field{pages}{108\bibrangedash 116}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1145/3209280
+      \endverb
+    \endentry
+    \entry{ward2016}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=5a9259d02c91726a8fd8b53f2f5cd4e6}{%
+           family={Ward},
+           familyi={W\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=4f02e8cc1a2c544befd0c40c7db7a338}{%
+           family={Peppard},
+           familyi={P\bibinitperiod},
+           given={Joe},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Wiley}%
+      }
+      \strng{namehash}{335df3d0c8ae943487bc1142bfe638d0}
+      \strng{fullhash}{335df3d0c8ae943487bc1142bfe638d0}
+      \strng{fullhashraw}{335df3d0c8ae943487bc1142bfe638d0}
+      \strng{bibnamehash}{335df3d0c8ae943487bc1142bfe638d0}
+      \strng{authorbibnamehash}{335df3d0c8ae943487bc1142bfe638d0}
+      \strng{authornamehash}{335df3d0c8ae943487bc1142bfe638d0}
+      \strng{authorfullhash}{335df3d0c8ae943487bc1142bfe638d0}
+      \strng{authorfullhashraw}{335df3d0c8ae943487bc1142bfe638d0}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{4}
+      \field{title}{Strategic Planning for Information Systems}
+      \field{year}{2016}
+      \verb{doi}
+      \verb 10.1002/9781119333289
+      \endverb
+    \endentry
+    \entry{whitman2018}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=128dfbb9adfdb0eab69766312db321b0}{%
+           family={Whitman},
+           familyi={W\bibinitperiod},
+           given={Michael\bibnamedelima E.},
+           giveni={M\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=7c8d8550c6a7453df1848c27e8f1a195}{%
+           family={Mattord},
+           familyi={M\bibinitperiod},
+           given={Herbert\bibnamedelima J.},
+           giveni={H\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cengage Learning}%
+      }
+      \strng{namehash}{94562000719e09265f5e4a9713eb7b4b}
+      \strng{fullhash}{94562000719e09265f5e4a9713eb7b4b}
+      \strng{fullhashraw}{94562000719e09265f5e4a9713eb7b4b}
+      \strng{bibnamehash}{94562000719e09265f5e4a9713eb7b4b}
+      \strng{authorbibnamehash}{94562000719e09265f5e4a9713eb7b4b}
+      \strng{authornamehash}{94562000719e09265f5e4a9713eb7b4b}
+      \strng{authorfullhash}{94562000719e09265f5e4a9713eb7b4b}
+      \strng{authorfullhashraw}{94562000719e09265f5e4a9713eb7b4b}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{6}
+      \field{title}{Principles of Information Security}
+      \field{year}{2018}
+      \verb{doi}
+      \verb 10.1007/978-3-319-98830-2
+      \endverb
+    \endentry
+    \entry{heeks2006}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=20a37077b38188b2a8310b554035e35d}{%
+           family={Heeks},
+           familyi={H\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{20a37077b38188b2a8310b554035e35d}
+      \strng{fullhash}{20a37077b38188b2a8310b554035e35d}
+      \strng{fullhashraw}{20a37077b38188b2a8310b554035e35d}
+      \strng{bibnamehash}{20a37077b38188b2a8310b554035e35d}
+      \strng{authorbibnamehash}{20a37077b38188b2a8310b554035e35d}
+      \strng{authornamehash}{20a37077b38188b2a8310b554035e35d}
+      \strng{authorfullhash}{20a37077b38188b2a8310b554035e35d}
+      \strng{authorfullhashraw}{20a37077b38188b2a8310b554035e35d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Medical Informatics}
+      \field{number}{2}
+      \field{title}{Health information systems: Failure, success and improvisation}
+      \field{volume}{75}
+      \field{year}{2006}
+      \field{pages}{125\bibrangedash 137}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1016/j.ijmedinf.2005.07.024
+      \endverb
+    \endentry
+    \entry{Microsoft:Concepto}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=140864078aeca1c7c35b4beb33c53c34}{%
+           family={Microsoft},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{fullhash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{fullhashraw}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{bibnamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorbibnamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://code.visualstud io.com/.}}
+      \field{title}{Visual Studio Code - Code Editing. Redefined.}
+      \field{year}{2016}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
