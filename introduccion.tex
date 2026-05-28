@@ -1,45 +1,79 @@
 \section{Introducción}
 \label{ch:introduccion}
 
-La introducción es la primera sección sustantiva de la tesis y tiene como propósito principal guiar al lector a través del contexto y la relevancia del estudio. En ella, se presenta el problema de investigación, se establecen los objetivos, se justifica la realización del trabajo y se delinean los alcances y limitaciones. Debe ser escrita de forma clara y concisa, capturando el interés del lector y proporcionando una visión general de lo que se abordará en los capítulos subsiguientes.
+El marcado de agua digital (\textit{digital watermarking}) es una técnica esencial en la era de la distribución digital para proteger la propiedad intelectual y garantizar la autenticidad de los contenidos multimedia. En el caso específico del audio, este proceso consiste en insertar información imperceptible, denominada marca de agua, dentro de la señal original. A diferencia de las técnicas tradicionales, que a menudo son vulnerables a manipulaciones comunes del audio, este proyecto propone el uso de Redes Neuronales Profundas (\textit{Deep Learning}) para desarrollar un sistema que sea robusto frente a ataques no intencionales, manteniendo al mismo tiempo una alta calidad acústica.
 
 \subsection{Antecedentes}
 \label{sec:antecedentes}
 
-En esta sección, se presenta una revisión concisa y pertinente de investigaciones previas, literatura existente y el estado del arte relacionado con el tema de la tesis. El objetivo es situar el trabajo actual dentro del conocimiento acumulado, identificar vacíos en la investigación y demostrar la originalidad y la necesidad del estudio propuesto. Se deben citar adecuadamente las fuentes, mostrando cómo el trabajo se construye sobre cimientos previos o cómo aborda aspectos no resueltos.
+El desarrollo de sistemas de marcado de agua ha evolucionado significativamente desde métodos sencillos en el dominio del tiempo hasta técnicas complejas en el dominio de la frecuencia. La integración de la inteligencia artificial ha abierto nuevas posibilidades para optimizar el balance entre la capacidad de carga de la marca, su imperceptibilidad y su robustez.
+
+\subsubsection{Antecedentes de la empresa}
+\label{subsec:antecedentes_empresa}
+
+El Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV), Unidad Tamaulipas, ubicado en Ciudad Victoria, es una institución de prestigio dedicada a la investigación científica y tecnológica. La unidad se especializa en áreas de tecnologías de la información y computación, proporcionando un entorno académico y tecnológico de vanguardia para el desarrollo de proyectos innovadores como el presente. Bajo la supervisión del Dr. Jose Juan Garcia Hernandez, el departamento de tecnologías de la información del CINVESTAV busca avanzar en el estado del arte de la seguridad y protección de señales digitales.
+
+\subsubsection{Antecedentes teóricos}
+\label{subsec:antecedentes_teoricos}
+
+Para comprender el funcionamiento del sistema propuesto, es fundamental revisar conceptos clave del procesamiento digital de señales:
+
+\begin{itemize}
+    \item \textbf{Representación de la Señal de Audio Digital:} El proceso de conversión analógica-digital (ADC) implica el muestreo (\textit{sampling}) y la cuantificación. Según el Teorema de Nyquist-Shannon, la frecuencia de muestreo debe ser al menos el doble de la frecuencia máxima de la señal para evitar el \textit{aliasing}.
+    \item \textbf{Procesamiento por Bloques (Framing) y Solapamiento (Overlap):} Dado que el audio es una señal no estacionaria, se divide en bloques pequeños (cuasi-estacionarios) para su análisis. El solapamiento (típicamente del 50\%) asegura que no se pierda información en los bordes debido al ventaneo (funciones como Hamming o Hann).
+    \item \textbf{Transformada de Fourier de Tiempo Corto (STFT):} Permite representar la señal en el dominio tiempo-frecuencia (espectrogramas), facilitando el modelado del enmascaramiento psicoacústico del oído humano.
+    \item \textbf{Aprendizaje Profundo (Deep Learning):} El uso de Autoencoders convolucionales y arquitecturas tipo U-Net permite aprender representaciones complejas de la señal de audio, facilitando la inserción y extracción de marcas de agua de manera robusta.
+\end{itemize}
+
+\subsubsection{Tabla comparativa}
+\label{subsec:tabla_comparativa}
+
+A continuación se presenta una comparación entre las técnicas tradicionales de marcado de agua y el enfoque propuesto basado en Redes Neuronales Profundas (\textit{Deep Learning}).
+
+\begin{table}[H]
+    \centering
+    \caption{Comparativa entre técnicas tradicionales y marcado de agua profundo.}
+    \label{tab:comparativa_metodos}
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Característica} & \textbf{Métodos Tradicionales} & \textbf{Marcado Profundo} \\
+        \hline
+        Robustez & Baja / Media & Alta \\
+        Imperceptibilidad & Variable & Alta \\
+        Adaptabilidad & Estática & Dinámica \\
+        Complejidad & Baja & Alta (Entrenamiento) \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \subsection{Definición del Problema}
 \label{sec:problema}
 
-Aquí se describe de manera clara y precisa el problema que la tesis busca resolver. Es fundamental articular el problema de forma que sea comprensible, relevante y factible de investigar. Esta sección debe responder a preguntas como: ¿Qué situación actual es insatisfactoria o genera una necesidad? ¿Qué aspectos de este problema no han sido abordados adecuadamente por investigaciones anteriores? La definición del problema puede ser formulada como una pregunta de investigación o una declaración clara de la brecha de conocimiento.
+El principal desafío en el marcado de agua de audio es la vulnerabilidad de la marca frente a procesos típicos de procesamiento de señales, como la compresión con pérdida (MP3), la adición de ruido, el remuestreo y el filtrado. Estos procesos, aunque a menudo no tienen una intención maliciosa, pueden degradar o eliminar la marca de agua si no está integrada de manera suficientemente robusta. Existe una necesidad constante de desarrollar métodos que maximicen la robustez sin introducir distorsiones audibles que afecten la experiencia del usuario.
 
 \subsection{Objetivos}
 \label{sec:objetivos}
 
-Los objetivos son las metas que se esperan alcanzar con la realización de la investigación. Deben ser claros, medibles, alcanzables, relevantes y con un tiempo definido (SMART, por sus siglas en inglés). Se dividen en un objetivo general y varios objetivos específicos.
+A continuación se presentan las metas establecidas para este proyecto de investigación.
 
 \subsubsection{Objetivo General}
 \label{subsec:objetivo_general}
 
-El objetivo general expresa el propósito fundamental del estudio en términos amplios. Es la meta principal que se busca lograr y generalmente abarca la totalidad de la investigación. Debe ser coherente con la definición del problema.
-\begin{itemize}
-    \item \textbf{Ejemplo:} Desarrollar un sistema automatizado para la detección temprana de fallas en turbinas eólicas utilizando técnicas de aprendizaje automático.
-\end{itemize}
+Desarrollar un sistema de marcado de audio digital basado en redes neuronales profundas con robustez a ataques no intencionales.
 
 \subsubsection{Objetivos Específicos}
 \label{subsec:objetivos_especificos}
 
-Los objetivos específicos detallan los pasos o las acciones concretas que se llevarán a cabo para alcanzar el objetivo general. Son tareas más pequeñas y desglosadas que, al ser cumplidas, permiten la consecución del objetivo principal.
 \begin{itemize}
-    \item \textbf{Ejemplo 1:} Recopilar y preprocesar un conjunto de datos de vibraciones y parámetros operativos de turbinas eólicas.
-    \item \textbf{Ejemplo 2:} Implementar y evaluar diferentes algoritmos de aprendizaje automático para la clasificación de estados operativos (normal, pre-falla, falla).
-    \item \textbf{Ejemplo 3:} Diseñar una interfaz de usuario para la visualización de alertas y el monitoreo en tiempo real del estado de las turbinas.
+    \item Determinar un dominio de operación adecuado para el marcado de agua de audio robusto.
+    \item Diseñar la estructura de una red neuronal profunda de marcado digital que considere el ruido asociado a los procesos típicos de audio.
+    \item Evaluar la robustez de las señales marcadas frente a ataques no intencionales.
 \end{itemize}
 
 \subsection{Justificación}
 \label{sec:justificacion}
 
-La justificación explica por qué es importante y relevante llevar a cabo la investigación. Se deben argumentar los beneficios y la utilidad del estudio desde diferentes perspectivas: teórica, práctica, social, económica, tecnológica, etc. Responde a la pregunta: ¿Por qué vale la pena invertir tiempo y recursos en esta investigación? Aquí se resaltan los aportes que la tesis generará al campo del conocimiento o a la solución de problemas específicos.
+La realización de este proyecto se justifica por la creciente necesidad de proteger los derechos de autor en la industria multimedia. Un sistema de marcado de agua robusto basado en \textit{Deep Learning} ofrece una solución avanzada para la identificación de contenidos y la auditoría de señales de audio. Al automatizar el proceso de inserción y extracción de marcas mediante redes neuronales, se puede lograr una mayor adaptabilidad a las características específicas de cada señal de audio, mejorando la seguridad y la fidelidad del contenido digital.
 
 \subsection{Alcances y Limitaciones}
 \label{sec:alcances_limitaciones}
@@ -47,66 +81,17 @@ La justificación explica por qué es importante y relevante llevar a cabo la in
 \subsubsection{Alcances}
 \label{subsec:alcances}
 
-Los alcances definen claramente hasta dónde llegará el estudio, qué aspectos cubrirá y cuáles serán sus fronteras. Establecen qué elementos, variables, poblaciones o contextos serán incluidos en la investigación. Es esencial para evitar expectativas irrealistas y para mantener el enfoque del trabajo.
+\begin{itemize}
+    \item Implementación de un preprocesamiento uniforme de señales de audio mediante segmentación en clips de 5 segundos.
+    \item Diseño y entrenamiento de un modelo de red neuronal profunda enfocado en la robustez.
+    \item Evaluación del sistema bajo ataques no intencionales estándar en la industria del audio.
+\end{itemize}
 
 \subsubsection{Limitaciones}
 \label{subsec:limitaciones}
 
-Las limitaciones son los factores externos o internos que podrían restringir la validez, generalización o profundidad de los resultados de la investigación. Es importante identificarlas honestamente, ya que demuestran un pensamiento crítico por parte del investigador. Pueden incluir restricciones de tiempo, recursos, acceso a datos, metodológicas, etc.
-
-\subsection{Ejemplos de Tablas e Inclusión de Imágenes}
-\label{sec:ejemplos_elementos}
-
-Para ilustrar el uso de elementos visuales en su tesis, a continuación se presentan ejemplos básicos de cómo incluir tablas e imágenes en LaTeX.
-
-\subsubsection{Inclusión de Tablas}
-
-Las tablas son herramientas fundamentales para presentar datos de manera organizada y comprensible.
-\begin{table}[H]
-    \centering
-    \caption{Clasificación de Sensores Comunes en Ingeniería.}
-    \label{tab:sensores_comunes}
-    \begin{tabular}{|l|c|c|}
-        \hline
-        \textbf{Tipo de Sensor} & \textbf{Magnitud Medida} & \textbf{Principio de Funcionamiento} \\
-        \hline
-        Termopar & Temperatura & Efecto Seebeck \\
-        Extensómetro & Deformación & Resistencia eléctrica \\
-        Acelerómetro & Aceleración & Efecto piezoeléctrico \\
-        Encoder rotatorio & Posición angular & Óptico/Magnético \\
-        \hline
-    \end{tabular}
-    \caption*{Nota: Esta tabla es un ejemplo para demostrar la estructura básica de una tabla en LaTeX.}
-\end{table}
-Como se puede observar en la Tabla \ref{tab:sensores_comunes}, la información se presenta de forma clara y estructurada. Es importante añadir un \verb|`\caption`|  para describir la tabla y un  \verb|`\label`|  para referenciarla en el texto.
-
-\subsubsection{Inclusión de Imágenes}
-
-Las imágenes, gráficos o diagramas son cruciales para complementar la explicación textual y facilitar la comprensión de conceptos complejos o resultados visuales.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{img/diagrama_proceso}
-    \caption{Diagrama de un proceso de control automático.}
-    \label{fig:diagrama_control}
-\end{figure}
-% La Figura \ref{fig:diagrama_control} ilustra un ejemplo de un diagrama de un proceso de control. Para incluir una imagen, se utiliza el entorno `figure` y el comando `\includegraphics`. Es fundamental especificar la ruta de la imagen (en este caso, `images/diagrama_proceso.png`) y un `width` para controlar su tamaño. Al igual que con las tablas, un `\caption` y un `\label` son indispensables. Es crucial que cada imagen tenga una calidad adecuada y que sea relevante para el texto.
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{img/grafico_datos1}
-        \caption{Datos de Temperatura.}
-        \label{fig:subfig_temp}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{img/grafico_datos2}
-        \caption{Datos de Presión.}
-        \label{fig:subfig_pres}
-    \end{subfigure}
-    \caption{Comparación de datos operativos de un sistema (Temperatura vs. Presión).}
-    \label{fig:comparacion_datos}
-\end{figure}
-Incluso es posible combinar varias imágenes en una sola figura, como se muestra en la Figura \ref{fig:comparacion_datos}, utilizando el paquete `subcaption`.
-
-Asegúrense de que todas las figuras y tablas estén debidamente referenciadas en el texto y que su contenido sea autoexplicativo, utilizando los pies de figura y títulos de tabla de manera efectiva.
+\begin{itemize}
+    \item El sistema está optimizado para señales de audio con frecuencias de muestreo estándar (44.1 kHz o 48 kHz).
+    \item La robustez se evaluará principalmente frente a ataques de procesamiento de señales comunes, no necesariamente contra ataques criptográficos avanzados o manipulación maliciosa de expertos.
+    \item El tiempo de procesamiento dependerá de la capacidad computacional disponible (uso de GPUs).
+\end{itemize}
