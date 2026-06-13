@@ -1,47 +1,52 @@
 \section{Introducción}
 \label{ch:introduccion}
 
-El marcado de agua digital (\textit{digital watermarking}) es una técnica esencial en la era de la distribución digital para proteger la propiedad intelectual y garantizar la autenticidad de los contenidos multimedia. En el caso específico del audio, este proceso consiste en insertar información imperceptible, denominada marca de agua, dentro de la señal original. A diferencia de las técnicas tradicionales, que a menudo son vulnerables a manipulaciones comunes del audio, este proyecto propone el uso de Redes Neuronales Profundas (\textit{Deep Learning}) para desarrollar un sistema que sea robusto frente a ataques no intencionales, manteniendo al mismo tiempo una alta calidad acústica.
+El marcado de agua digital (\textit{digital watermarking}) se ha consolidado como una herramienta fundamental en la gestión de derechos digitales (DRM) y la protección de la propiedad intelectual en la era de la distribución masiva de contenidos multimedia \cite{cox2007digital}. En el ámbito específico de las señales de audio, esta técnica consiste en la inserción de información secundaria, conocida como marca de agua, dentro de una señal anfitriona de forma que sea imperceptible para el oído humano pero recuperable mediante algoritmos especializados. A diferencia de los metadatos convencionales, que pueden ser fácilmente eliminados o alterados, la marca de agua está íntimamente ligada a la estructura de la señal, lo que le confiere una persistencia inherente frente a diversas manipulaciones \cite{boney1996digital}.
+
+En la actualidad, con el auge de las tecnologías de generación de contenido basadas en inteligencia artificial y la facilidad para realizar ediciones no autorizadas, la necesidad de sistemas de marcado robustos es más crítica que nunca. Las técnicas tradicionales, aunque eficaces en entornos controlados, a menudo presentan vulnerabilidades ante ataques comunes como la compresión con pérdida (MP3, AAC), el remuestreo y el filtrado \cite{arnold2000audio}. Este proyecto propone el desarrollo de un sistema de marcado de agua digital profundo (\textit{Deep Watermarking}), aprovechando la capacidad de las Redes Neuronales Profundas (\textit{Deep Learning}) para aprender representaciones complejas y robustas de las señales de audio, garantizando un equilibrio óptimo entre imperceptibilidad acústica y resistencia a ataques no intencionales.
 
 \subsection{Antecedentes}
 \label{sec:antecedentes}
 
-El desarrollo de sistemas de marcado de agua ha evolucionado significativamente desde métodos sencillos en el dominio del tiempo hasta técnicas complejas en el dominio de la frecuencia. La integración de la inteligencia artificial ha abierto nuevas posibilidades para optimizar el balance entre la capacidad de carga de la marca, su imperceptibilidad y su robustez.
+La evolución del marcado de agua ha transitado desde métodos sencillos en el dominio del tiempo, como la modificación del bit menos significativo (LSB), hasta técnicas avanzadas en el dominio de la frecuencia utilizando la Transformada Discreta de Wavelet (DWT) o la Transformada de Fourier \cite{cox2007digital}. Sin embargo, el surgimiento de modelos de aprendizaje profundo ha revolucionado este campo, permitiendo el diseño de sistemas de extremo a extremo (\textit{end-to-end}) que superan las limitaciones de los métodos manuales (\textit{hand-crafted features}).
 
 \subsubsection{Antecedentes de la empresa}
 \label{subsec:antecedentes_empresa}
 
-El Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV), Unidad Tamaulipas, ubicado en Ciudad Victoria, es una institución de prestigio dedicada a la investigación científica y tecnológica. La unidad se especializa en áreas de tecnologías de la información y computación, proporcionando un entorno académico y tecnológico de vanguardia para el desarrollo de proyectos innovadores como el presente. Bajo la supervisión del Dr. Jose Juan Garcia Hernandez, el departamento de tecnologías de la información del CINVESTAV busca avanzar en el estado del arte de la seguridad y protección de señales digitales.
+El Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV), Unidad Tamaulipas, es un referente en la investigación científica en México. Especialmente en el área de tecnologías de la información, el CINVESTAV ha liderado proyectos innovadores en seguridad de la información y procesamiento de señales. El Dr. Jose Juan Garcia Hernandez, asesor de este proyecto, supervisa esta investigación aportando su experiencia en el procesamiento de señales y seguridad de la información. El desarrollo de este sistema se apoya en investigaciones recientes que abordan la robustez ante ataques complejos y la imperceptibilidad mediante modelos psicoacústicos avanzados \cite{singh2024silentcipher, liu2024audiomarkbench}.
 
-\subsubsection{Antecedentes teóricos}
-\label{subsec:antecedentes_teoricos}
+\subsubsection{Estado del Arte}
+\label{subsec:estado_del_arte}
 
-Para comprender el funcionamiento del sistema propuesto, es fundamental revisar conceptos clave del procesamiento digital de señales:
+Recientemente, el uso de Redes Neuronales Convolucionales (CNN) y arquitecturas tipo Autoencoder ha demostrado ser altamente efectivo para el ocultamiento de datos. El trabajo seminal \textit{HiDDeN} de Zhu et al. \cite{zhu2018hidden} sentó las bases para el marcado de agua profundo en imágenes, técnica que ha sido adaptada con éxito al dominio del audio.
 
-\begin{itemize}
-    \item \textbf{Representación de la Señal de Audio Digital:} El proceso de conversión analógica-digital (ADC) implica el muestreo (\textit{sampling}) y la cuantificación. Según el Teorema de Nyquist-Shannon, la frecuencia de muestreo debe ser al menos el doble de la frecuencia máxima de la señal para evitar el \textit{aliasing}.
-    \item \textbf{Procesamiento por Bloques (Framing) y Solapamiento (Overlap):} Dado que el audio es una señal no estacionaria, se divide en bloques pequeños (cuasi-estacionarios) para su análisis. El solapamiento (típicamente del 50\%) asegura que no se pierda información en los bordes debido al ventaneo (funciones como Hamming o Hann).
-    \item \textbf{Transformada de Fourier de Tiempo Corto (STFT):} Permite representar la señal en el dominio tiempo-frecuencia (espectrogramas), facilitando el modelado del enmascaramiento psicoacústico del oído humano.
-    \item \textbf{Aprendizaje Profundo (Deep Learning):} El uso de Autoencoders convolucionales y arquitecturas tipo U-Net permite aprender representaciones complejas de la señal de audio, facilitando la inserción y extracción de marcas de agua de manera robusta.
-\end{itemize}
+Investigaciones recientes como \textit{DeAR} \cite{liu2023dear} se han enfocado en la robustez frente al re-grabado (\textit{re-recording}), un ataque físico complejo donde el audio se reproduce a través de altavoces y se captura mediante un micrófono. Por otro lado, sistemas como \textit{WavMark} \cite{chen2023wavmark} utilizan Redes Neuronales Invertibles (INN) para lograr una alta capacidad de carga y fidelidad en solo un segundo de audio. Meta AI ha presentado recientemente \textit{AudioSeal} \cite{sanroman2024audioseal}, un sistema diseñado específicamente para la detección proactiva de clonación de voz, demostrando la relevancia actual de estas técnicas en la lucha contra los \textit{deepfakes}.
 
-\subsubsection{Tabla comparativa}
-\label{subsec:tabla_comparativa}
+\subsubsection{Comparativa de Trabajos Relacionados}
+\label{subsec:comparativa_trabajos}
 
-A continuación se presenta una comparación entre las técnicas tradicionales de marcado de agua y el enfoque propuesto basado en Redes Neuronales Profundas (\textit{Deep Learning}).
+Para situar la propuesta actual, se presenta en la Tabla \ref{tab:comparativa_detallada} una comparativa entre diversas técnicas representativas del estado del arte, destacando sus fortalezas y debilidades.
 
 \begin{table}[H]
     \centering
-    \caption{Comparativa entre técnicas tradicionales y marcado de agua profundo.}
-    \label{tab:comparativa_metodos}
-    \begin{tabular}{|l|c|c|}
+    \scriptsize
+    \caption{Comparativa de técnicas de marcado de agua en el estado del arte.}
+    \label{tab:comparativa_detallada}
+    \begin{tabular}{|L{3cm}|L{2cm}|L{2.5cm}|L{2.5cm}|L{2.5cm}|}
         \hline
-        \textbf{Característica} & \textbf{Métodos Tradicionales} & \textbf{Marcado Profundo} \\
+        \textbf{Trabajo / Método} & \textbf{Paradigma} & \textbf{Dominio} & \textbf{Principal Fortaleza} & \textbf{Limitación} \\
         \hline
-        Robustez & Baja / Media & Alta \\
-        Imperceptibilidad & Variable & Alta \\
-        Adaptabilidad & Estática & Dinámica \\
-        Complejidad & Baja & Alta (Entrenamiento) \\
+        Boney et al. \cite{boney1996digital} & Tradicional & Tiempo/Frecuencia & Pionero en el uso de enmascaramiento & Baja robustez a compresión agresiva \\
+        \hline
+        Singh et al. \cite{singh2024silentcipher} & Deep Learning & Frecuencia/Psycho & Imperceptibilidad superior (SOTA) & Requiere modelos psicoacústicos \\
+        \hline
+        Zhu et al. (HiDDeN) \cite{zhu2018hidden} & Deep Learning & Espacial (Imagen) & Primer modelo end-to-end exitoso & Requiere adaptación para señales 1D (audio) \\
+        \hline
+        Liu et al. (DeAR) \cite{liu2023dear} & Deep Learning & Espectrograma (2D) & Resiliencia al re-grabado (aire) & Alta carga computacional \\
+        \hline
+        Chen et al. (WavMark) \cite{chen2023wavmark} & Deep Learning & Tiempo (INN) & Alta capacidad (bits/s) & Sensible a variaciones de fase \\
+        \hline
+        \textbf{Propuesta (Deep Robust)} & \textbf{Deep Learning} & \textbf{Espectrograma / STFT} & \textbf{Robustez a ataques no intencionales} & \textbf{Requiere entrenamiento costoso} \\
         \hline
     \end{tabular}
 \end{table}
@@ -49,31 +54,29 @@ A continuación se presenta una comparación entre las técnicas tradicionales d
 \subsection{Definición del Problema}
 \label{sec:problema}
 
-El principal desafío en el marcado de agua de audio es la vulnerabilidad de la marca frente a procesos típicos de procesamiento de señales, como la compresión con pérdida (MP3), la adición de ruido, el remuestreo y el filtrado. Estos procesos, aunque a menudo no tienen una intención maliciosa, pueden degradar o eliminar la marca de agua si no está integrada de manera suficientemente robusta. Existe una necesidad constante de desarrollar métodos que maximicen la robustez sin introducir distorsiones audibles que afecten la experiencia del usuario.
+El principal desafío en el marcado de agua de audio radica en el compromiso (\textit{trade-off}) entre tres pilares fundamentales: imperceptibilidad, robustez y capacidad \cite{cox2007digital}. Las señales de audio son procesadas constantemente mediante compresión con pérdida, filtrado, remuestreo y adición de ruido. Estos procesos, aunque a menudo no tienen una intención maliciosa, degradan la señal de tal forma que las marcas de agua tradicionales pierden su capacidad de ser extraídas correctamente. Existe, por tanto, una necesidad de desarrollar métodos que puedan "aprender" a identificar las características invariantes de la señal que sobreviven a estos procesos, permitiendo una extracción confiable incluso bajo condiciones de degradación severa.
 
 \subsection{Objetivos}
 \label{sec:objetivos}
 
-A continuación se presentan las metas establecidas para este proyecto de investigación.
-
 \subsubsection{Objetivo General}
-\label{subsec:objetivo_general}
+\label{subsec:objective_general}
 
-Desarrollar un sistema de marcado de audio digital basado en redes neuronales profundas con robustez a ataques no intencionales.
+Desarrollar un sistema de marcado de audio digital basado en redes neuronales profundas robusto a ataques de procesamiento de señales no intencionales.
 
 \subsubsection{Objetivos Específicos}
 \label{subsec:objetivos_especificos}
 
 \begin{itemize}
-    \item Determinar un dominio de operación adecuado para el marcado de agua de audio robusto.
-    \item Diseñar la estructura de una red neuronal profunda de marcado digital que considere el ruido asociado a los procesos típicos de audio.
-    \item Evaluar la robustez de las señales marcadas frente a ataques no intencionales.
+    \item Realizar una investigación profunda del estado del arte en técnicas de marcado profundo y modelos de enmascaramiento psicoacústico.
+    \item Diseñar e implementar una arquitectura de red neuronal (Autoencoder o U-Net) que integre capas de ruido simulado para fomentar el aprendizaje de características robustas.
+    \item Evaluar el rendimiento del sistema mediante métricas objetivas de calidad (SNR, ODG) y robustez (BER).
 \end{itemize}
 
 \subsection{Justificación}
 \label{sec:justificacion}
 
-La realización de este proyecto se justifica por la creciente necesidad de proteger los derechos de autor en la industria multimedia. Un sistema de marcado de agua robusto basado en \textit{Deep Learning} ofrece una solución avanzada para la identificación de contenidos y la auditoría de señales de audio. Al automatizar el proceso de inserción y extracción de marcas mediante redes neuronales, se puede lograr una mayor adaptabilidad a las características específicas de cada señal de audio, mejorando la seguridad y la fidelidad del contenido digital.
+La protección del contenido digital es una prioridad para la industria del entretenimiento y la ciberseguridad. Al utilizar \textit{Deep Learning}, es posible crear marcas de agua que se adapten de forma dinámica a la señal de audio, ocultándose en regiones donde el oído humano es menos sensible pero donde la robustez es mayor. Este proyecto no solo contribuye al avance técnico en la protección de señales, sino que también proporciona una base sólida para futuras aplicaciones en la auditoría de contenidos y la lucha contra la desinformación generada por IA.
 
 \subsection{Alcances y Limitaciones}
 \label{sec:alcances_limitaciones}
@@ -82,16 +85,17 @@ La realización de este proyecto se justifica por la creciente necesidad de prot
 \label{subsec:alcances}
 
 \begin{itemize}
-    \item Implementación de un preprocesamiento uniforme de señales de audio mediante segmentación en clips de 5 segundos.
-    \item Diseño y entrenamiento de un modelo de red neuronal profunda enfocado en la robustez.
-    \item Evaluación del sistema bajo ataques no intencionales estándar en la industria del audio.
+    \item Desarrollo de un prototipo funcional en Python utilizando librerías de alto nivel como PyTorch o TensorFlow.
+    \item Entrenamiento del modelo con un conjunto de datos diverso que incluya voz, música y sonidos ambientales.
+    \item Evaluación bajo ataques de compresión MP3, ruido Gaussiano y filtrado pasa-bajos.
 \end{itemize}
 
 \subsubsection{Limitaciones}
 \label{subsec:limitaciones}
 
 \begin{itemize}
-    \item El sistema está optimizado para señales de audio con frecuencias de muestreo estándar (44.1 kHz o 48 kHz).
-    \item La robustez se evaluará principalmente frente a ataques de procesamiento de señales comunes, no necesariamente contra ataques criptográficos avanzados o manipulación maliciosa de expertos.
-    \item El tiempo de procesamiento dependerá de la capacidad computacional disponible (uso de GPUs).
+    \item El sistema requiere hardware especializado (GPU) para un entrenamiento eficiente.
+    \item La robustez contra ataques maliciosos diseñados específicamente para burlar la red (ataques adversarios) está fuera del alcance inicial.
+    \item El procesamiento en tiempo real dependerá de la optimización del modelo final.
 \end{itemize}
+

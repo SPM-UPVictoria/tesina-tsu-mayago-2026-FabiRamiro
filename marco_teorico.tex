@@ -1,0 +1,59 @@
+\section{Marco Teórico}
+\label{ch:marco_teorico}
+
+Este capítulo establece los fundamentos teóricos necesarios para comprender el desarrollo del sistema de marcado de agua profundo. Se abordan los conceptos de marcado de agua digital, el procesamiento de señales de audio, los modelos psicoacústicos y las arquitecturas de aprendizaje profundo empleadas.
+
+\subsection{Marcado de Agua Digital}
+\label{sec:fundamentos_watermarking}
+
+El marcado de agua digital es una técnica de ocultamiento de información que busca insertar un mensaje (marca) dentro de una señal digital sin alterar significativamente su percepción \cite{cox2007digital}. Según Cox et al. \cite{cox2007digital}, un sistema de marcado de agua se define por tres propiedades fundamentales que forman un compromiso de diseño:
+
+\begin{itemize}
+    \item \textbf{Imperceptibilidad:} La señal marcada debe ser acústicamente idéntica a la señal original para un oyente humano.
+    \item \textbf{Robustez:} La marca de agua debe permanecer detectable incluso después de que la señal haya sufrido degradaciones o ataques de procesamiento.
+    \item \textbf{Capacidad:} La cantidad de información que se puede insertar por unidad de tiempo sin degradar la calidad.
+\end{itemize}
+
+\subsection{Procesamiento Digital de Audio}
+\label{sec:procesamiento_audio}
+
+El audio digital es una representación discreta de una onda sonora continua. El proceso de digitalización implica el muestreo (\textit{sampling}) y la cuantificación.
+
+\subsubsection{Muestreo y Teorema de Nyquist}
+El teorema de Nyquist-Shannon establece que para reconstruir una señal sin errores (\textit{aliasing}), la frecuencia de muestreo $f_s$ debe ser al menos el doble de la frecuencia máxima $f_{max}$ presente en la señal ($f_s \geq 2f_{max}$). Para audio de alta fidelidad, se utilizan comúnmente $44,100$ Hz o $48,000$ Hz.
+
+\subsubsection{Transformada de Fourier de Tiempo Corto (STFT)}
+Dado que el audio es una señal no estacionaria (sus propiedades cambian con el tiempo), se utiliza la STFT para analizar su contenido en el dominio tiempo-frecuencia. La señal se divide en segmentos cortos llamados tramas (\textit{frames}), a las que se aplica una función de ventana $w(n)$ y la Transformada Discreta de Fourier (DFT).
+
+\begin{equation}
+    X(m, \omega) = \sum_{n=-\infty}^{\infty} x(n) w(n - mR) e^{-j\omega n}
+\end{equation}
+
+donde $m$ es el índice de la trama y $R$ es el tamaño del salto (\textit{hop size}).
+
+\subsection{Enmascaramiento Psicoacústico}
+\label{sec:psicoacustica}
+
+El sistema auditivo humano (HAS) tiene limitaciones que pueden aprovecharse para ocultar información. El enmascaramiento ocurre cuando un sonido fuerte (enmascarante) hace que un sonido más débil (enmascarado) sea inaudible si están cerca en tiempo o frecuencia. Los umbrales de enmascaramiento definen la máxima energía de ruido que se puede añadir a una frecuencia específica sin que sea perceptible.
+
+\subsection{Aprendizaje Profundo (Deep Learning)}
+\label{sec:deep_learning_theory}
+
+El aprendizaje profundo utiliza redes neuronales con múltiples capas para extraer características automáticas de los datos \cite{goodfellow2016deep}.
+
+\subsubsection{Redes Neuronales Convolucionales (CNN)}
+Las CNN son ideales para procesar datos con estructura de rejilla, como los espectrogramas de audio. Utilizan operaciones de convolución para detectar patrones locales (texturas, tonos) invariantes a la traslación.
+
+\subsubsection{Autoencoders y U-Net}
+Un Autoencoder consta de un codificador que comprime la entrada en un espacio latente y un decodificador que intenta reconstruirla. La arquitectura \textit{U-Net} \cite{ronneberger2015u} mejora este proceso mediante conexiones de salto (\textit{skip connections}) que preservan detalles de alta resolución, lo cual es vital para mantener la fidelidad del audio en el marcado de agua.
+
+\subsection{Métricas de Evaluación}
+\label{sec:metricas}
+
+Para validar el sistema, se emplean métricas que miden la distorsión y la fidelidad de la recuperación:
+
+\begin{itemize}
+    \item \textbf{Relación Señal-Ruido (SNR):} Mide la potencia de la señal respecto a la potencia del ruido introducido por la marca.
+    \item \textbf{Tasa de Error de Bit (BER):} Porcentaje de bits recuperados incorrectamente tras la extracción.
+    \item \textbf{Grado de Distorsión Objetiva (ODG):} Métrica basada en el estándar ITU-R BS.1387 (\textit{PEAQ}) que simula la percepción humana del audio.
+\end{itemize}

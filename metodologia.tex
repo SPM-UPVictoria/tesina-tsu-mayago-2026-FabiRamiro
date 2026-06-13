@@ -9,7 +9,7 @@ La metodología de este proyecto se divide en etapas secuenciales que permiten t
 Debido a que las redes neuronales profundas requieren tensores de entrada con dimensiones fijas, la primera etapa consiste en una segmentación uniforme de los archivos de audio originales.
 
 \begin{itemize}
-    \item \textbf{Procedimiento:} Se cargan los archivos de audio utilizando la librería \textit{librosa}. Cada señal se divide en fragmentos de duración objetivo $t_{target} = 5$ segundos.
+    \item \textbf{Procedimiento:} Se cargan los archivos de audio utilizando la librería \textit{librosa}, ampliamente utilizada en el análisis de audio computacional. Cada señal se divide en fragmentos de duración objetivo $t_{target} = 5$ segundos.
     \item \textbf{Criterio de Descarte:} Para evitar el uso de técnicas de relleno (\textit{padding}) que podrían inducir sesgos, se implementó un criterio estricto donde cualquier residuo final de la señal que no complete los 5 segundos es ignorado.
     \item \textbf{Métricas de Amplitud:} Durante este proceso se registran las amplitudes máximas y mínimas de cada canal (izquierdo y derecho) para detectar posibles recortes (\textit{clipping}) y analizar el rango dinámico, lo cual es vital para determinar la ganancia de inserción de la marca de agua.
 \end{itemize}
