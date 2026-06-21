@@ -1,60 +1,124 @@
 \section{Introducción}
 \label{ch:introduccion}
 
-El marcado de agua digital (\textit{digital watermarking}) se ha consolidado como una herramienta fundamental en la gestión de derechos digitales (DRM) y la protección de la propiedad intelectual en la era de la distribución masiva de contenidos multimedia \cite{cox2007digital}. En el ámbito específico de las señales de audio, esta técnica consiste en la inserción de información secundaria, conocida como marca de agua, dentro de una señal anfitriona de forma que sea imperceptible para el oído humano pero recuperable mediante algoritmos especializados. A diferencia de los metadatos convencionales, que pueden ser fácilmente eliminados o alterados, la marca de agua está íntimamente ligada a la estructura de la señal, lo que le confiere una persistencia inherente frente a diversas manipulaciones \cite{boney1996digital}.
+La proliferación de plataformas de distribución de contenido digital y la democratización de las herramientas de edición multimedia han transformado radicalmente el panorama de la propiedad intelectual en el siglo XXI. En este contexto, el marcado de agua digital (\textit{digital watermarking}) se ha consolidado como una de las técnicas más relevantes para la protección y autenticación de contenidos multimedia, incluyendo imágenes, vídeo y señales de audio \cite{cox2007digital}. A diferencia del cifrado convencional, que protege el contenido durante su transmisión pero lo hace accesible una vez descifrado, el marcado de agua integra la información de protección directamente en el contenido mismo, de modo que dicha información permanece ligada al archivo independientemente de los procesos de copia o distribución a los que sea sometido.
 
-En la actualidad, con el auge de las tecnologías de generación de contenido basadas en inteligencia artificial y la facilidad para realizar ediciones no autorizadas, la necesidad de sistemas de marcado robustos es más crítica que nunca. Las técnicas tradicionales, aunque eficaces en entornos controlados, a menudo presentan vulnerabilidades ante ataques comunes como la compresión con pérdida (MP3, AAC), el remuestreo y el filtrado \cite{arnold2000audio}. Este proyecto propone el desarrollo de un sistema de marcado de agua digital profundo (\textit{Deep Watermarking}), aprovechando la capacidad de las Redes Neuronales Profundas (\textit{Deep Learning}) para aprender representaciones complejas y robustas de las señales de audio, garantizando un equilibrio óptimo entre imperceptibilidad acústica y resistencia a ataques no intencionales.
+En el dominio específico de las señales de audio, el marcado de agua consiste en la inserción de un mensaje binario, denominado marca de agua (\textit{watermark}), dentro de una señal anfitriona (\textit{host signal}) de manera imperceptible para el sistema auditivo humano (HAS, por sus siglas en inglés). Esta incrustación debe resistir diversas manipulaciones que la señal puede sufrir durante su ciclo de vida normal, tales como compresión con pérdida (formato MP3 o AAC), conversión entre formatos, remuestreo, ecualización y adición de ruido ambiental \cite{arnold2000audio}. La capacidad de un sistema de marcado de agua para sobrevivir a estas transformaciones es lo que se denomina \textit{robustez}, y representa uno de los desafíos técnicos más complejos en el área.
+
+Durante las últimas dos décadas, las técnicas de marcado de agua para audio han evolucionado significativamente. Los métodos clásicos, basados en modificaciones en el dominio del tiempo o en el dominio de la frecuencia mediante transformadas matemáticas como la Transformada Discreta de Wavelet (DWT) o la Transformada de Fourier (DFT), ofrecían soluciones robustas para escenarios controlados. Sin embargo, su diseño manual de características (\textit{hand-crafted features}) los hace inherentemente limitados frente a ataques adaptativos o combinaciones complejas de procesamiento de señales \cite{boney1996digital}. El surgimiento y la madurez de las técnicas de aprendizaje profundo (\textit{Deep Learning}) ha abierto una nueva era en este campo, en la que los sistemas aprenden de forma automática, a partir de datos, las representaciones óptimas para esconder y recuperar la información oculta.
+
+El presente proyecto, desarrollado en el Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV) Unidad Tamaulipas, bajo la dirección del Dr. Jose Juan Garcia Hernandez, propone el desarrollo de un sistema de marcado de agua digital profundo y robusto en señales de audio. El sistema está fundamentado en arquitecturas de redes neuronales profundas, específicamente en modelos tipo Autoencoder y U-Net, que operan principalmente en el dominio tiempo-frecuencia a través de la Transformada de Fourier de Tiempo Corto (STFT). El objetivo central es lograr un equilibrio óptimo entre imperceptibilidad acústica y resistencia a ataques de procesamiento de señales no intencionales, tales como la compresión MP3 con diferentes tasas de bits, la adición de ruido blanco gaussiano y el filtrado pasa-bajos.
+
+Este trabajo adquiere especial relevancia ante el auge de las tecnologías generativas basadas en inteligencia artificial, como los modelos de síntesis de voz (\textit{text-to-speech}) y los modelos de clonación de voz (\textit{voice cloning}), que facilitan la creación y distribución de contenido de audio falso o no autorizado. En este escenario, un sistema robusto de marcado de agua profundo no solo tiene aplicaciones en la gestión de derechos digitales (DRM), sino también en la autenticación forense de contenidos y en la lucha activa contra la desinformación generada por inteligencia artificial.
 
 \subsection{Antecedentes}
 \label{sec:antecedentes}
 
-La evolución del marcado de agua ha transitado desde métodos sencillos en el dominio del tiempo, como la modificación del bit menos significativo (LSB), hasta técnicas avanzadas en el dominio de la frecuencia utilizando la Transformada Discreta de Wavelet (DWT) o la Transformada de Fourier \cite{cox2007digital}. Sin embargo, el surgimiento de modelos de aprendizaje profundo ha revolucionado este campo, permitiendo el diseño de sistemas de extremo a extremo (\textit{end-to-end}) que superan las limitaciones de los métodos manuales (\textit{hand-crafted features}).
+La historia del marcado de agua digital en audio puede dividirse en tres grandes etapas tecnológicas. La primera etapa, que abarca aproximadamente desde mediados de la década de 1990 hasta principios de los 2000, se caracterizó por el desarrollo de técnicas en el dominio del tiempo, como la modificación del bit menos significativo (LSB, \textit{Least Significant Bit}). En este paradigma, la marca de agua se inserta alterando los bits de menor peso de las muestras de audio, lo que resulta en una baja distorsión perceptible, pero también en una escasa robustez ante cualquier tipo de procesamiento digital \cite{arnold2000audio}.
 
-\subsubsection{Antecedentes de la empresa}
+La segunda etapa corresponde al auge de los métodos en el dominio de la frecuencia, que aprovechan la estructura espectral de la señal de audio para esconder la marca en regiones donde el sistema auditivo humano es menos sensible. Técnicas como la expansión de espectro (\textit{spread spectrum}), propuesta por Boney et al. \cite{boney1996digital}, o el uso de la Transformada Discreta de Coseno (DCT) y la Transformada Discreta de Wavelet (DWT), permitieron mejorar considerablemente la robustez frente a compresión y filtrado. Paralelamente, el desarrollo de modelos psicoacústicos basados en el estándar MPEG (como el modelo psicoacústico de la norma ISO/IEC 11172-3) permitió identificar con mayor precisión las regiones de enmascaramiento, es decir, aquellas frecuencias y rangos temporales donde la energía añadida por la marca de agua resulta inaudible para el oyente humano.
+
+La tercera y más reciente etapa corresponde a la aplicación del aprendizaje profundo al problema del marcado de agua. El trabajo seminal de Zhu et al. \cite{zhu2018hidden}, denominado \textit{HiDDeN} (\textit{Hiding Data with Deep Networks}), demostró por primera vez la viabilidad de un sistema de marcado de agua de extremo a extremo (\textit{end-to-end}) para imágenes, en el que tanto el incrustador (\textit{encoder}) como el extractor (\textit{decoder}) son redes neuronales entrenadas conjuntamente, junto con una red adversaria que simula los ataques. Este paradigma fue posteriormente adaptado y ampliado al dominio del audio, dando lugar a una nueva generación de sistemas que superan en robustez e imperceptibilidad a los métodos tradicionales.
+\subsubsection{Antecedentes de la Empresa}
 \label{subsec:antecedentes_empresa}
 
-El Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV), Unidad Tamaulipas, es un referente en la investigación científica en México. Especialmente en el área de tecnologías de la información, el CINVESTAV ha liderado proyectos innovadores en seguridad de la información y procesamiento de señales. El Dr. Jose Juan Garcia Hernandez, asesor de este proyecto, supervisa esta investigación aportando su experiencia en el procesamiento de señales y seguridad de la información. El desarrollo de este sistema se apoya en investigaciones recientes que abordan la robustez ante ataques complejos y la imperceptibilidad mediante modelos psicoacústicos avanzados \cite{singh2024silentcipher, liu2024audiomarkbench}.
+El Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV) es una institución pública de investigación científica y desarrollo tecnológico, adscrita al Instituto Politécnico Nacional (IPN). Fundado en 1961, el CINVESTAV es reconocido a nivel nacional e internacional como uno de los centros de investigación más importantes de América Latina, con contribuciones significativas en matemáticas, física, biología, ingeniería y ciencias computacionales.
+
+\textbf{Ubicación.} La Unidad Tamaulipas del CINVESTAV se encuentra ubicada en Ciudad Victoria, Tamaulipas, México, siendo una de las unidades regionales del CINVESTAV establecidas para fortalecer el desarrollo científico y tecnológico en el interior de la República.
+
+\textbf{Giro.} La Unidad Tamaulipas se dedica a la investigación científica básica y aplicada, así como a la formación de recursos humanos de posgrado de alto nivel (maestría y doctorado) en áreas de tecnologías de la información, procesamiento de señales y sistemas inteligentes.
+
+\textbf{Misión.} Realizar investigación científica y tecnológica de vanguardia, así como formar investigadores y técnicos de excelencia que contribuyan al desarrollo científico, tecnológico y social de México, generando conocimiento de frontera con impacto nacional e internacional.
+
+\textbf{Visión.} Consolidarse como un centro de investigación de clase mundial, reconocido por la calidad e impacto de sus contribuciones científicas en ciencias e ingeniería, y por la formación de recursos humanos capaces de enfrentar los retos tecnológicos del siglo XXI.
+
+\textbf{Infraestructura.} La Unidad Tamaulipas cuenta con laboratorios especializados en procesamiento de señales y sistemas inteligentes, equipados con estaciones de trabajo de alto rendimiento y unidades de procesamiento gráfico (GPU) para el entrenamiento de modelos de aprendizaje profundo. El laboratorio donde se desarrolla el presente proyecto dispone de acceso a servidores con GPU de alto rendimiento, infraestructura fundamental para el entrenamiento de redes neuronales profundas con grandes conjuntos de datos de audio. Adicionalmente, la unidad cuenta con acceso a repositorios especializados de datos y a una red académica de colaboración con otras instituciones nacionales e internacionales.
+
+El Dr. Jose Juan Garcia Hernandez, investigador titular de la Unidad Tamaulipas, lidera líneas de investigación en seguridad de la información y procesamiento de señales multimedia, en las cuales se enmarca el presente proyecto de estadía. Su experiencia en el área garantiza la dirección metodológica y científica del trabajo, asegurando que los resultados obtenidos sean pertinentes y de calidad académica.
 
 \subsubsection{Estado del Arte}
 \label{subsec:estado_del_arte}
 
-Recientemente, el uso de Redes Neuronales Convolucionales (CNN) y arquitecturas tipo Autoencoder ha demostrado ser altamente efectivo para el ocultamiento de datos. El trabajo seminal \textit{HiDDeN} de Zhu et al. \cite{zhu2018hidden} sentó las bases para el marcado de agua profundo en imágenes, técnica que ha sido adaptada con éxito al dominio del audio.
+El campo del marcado de agua profundo en audio ha experimentado un crecimiento exponencial en los últimos cinco años. A continuación, se presenta un análisis detallado de las contribuciones más relevantes, sus metodologías, sus resultados cuantitativos y sus limitaciones, a fin de contextualizar la propuesta del presente trabajo.
 
-Investigaciones recientes como \textit{DeAR} \cite{liu2023dear} se han enfocado en la robustez frente al re-grabado (\textit{re-recording}), un ataque físico complejo donde el audio se reproduce a través de altavoces y se captura mediante un micrófono. Por otro lado, sistemas como \textit{WavMark} \cite{chen2023wavmark} utilizan Redes Neuronales Invertibles (INN) para lograr una alta capacidad de carga y fidelidad en solo un segundo de audio. Meta AI ha presentado recientemente \textit{AudioSeal} \cite{sanroman2024audioseal}, un sistema diseñado específicamente para la detección proactiva de clonación de voz, demostrando la relevancia actual de estas técnicas en la lucha contra los \textit{deepfakes}.
+\textbf{HiDDeN (Zhu et al., 2018).} El modelo \textit{HiDDeN} \cite{zhu2018hidden} fue el punto de inflexión para el marcado de agua basado en redes profundas. Su arquitectura consiste en un codificador CNN que toma la imagen anfitriona y el mensaje binario como entrada, produciendo una imagen marcada; un bloque de ruido (\textit{noise layer}) que simula ataques como la compresión JPEG o la adición de ruido; y un decodificador CNN que recupera el mensaje. Aunque fue concebido para imágenes, su paradigma de entrenamiento adversarial y su formulación de pérdida combinada (reconstrucción + decodificación) establecieron el estándar para todos los sistemas posteriores, incluyendo los de audio.
 
+\textbf{WavMark (Chen et al., 2023).} \textit{WavMark} \cite{chen2023wavmark} adaptó el paradigma de \textit{HiDDeN} al dominio del audio mediante el uso de Redes Neuronales Invertibles (INN, \textit{Invertible Neural Networks}). La propiedad de invertibilidad garantiza que la transformación del codificador sea matemáticamente reversible, lo que asegura una alta fidelidad en la reconstrucción del audio original y minimiza la distorsión introducida. El sistema reporta una capacidad de hasta 32 bits por segundo de audio y una Tasa de Error de Bit (BER) menor al 1\% bajo ataques de ruido gaussiano. Sin embargo, su principal limitación radica en la sensibilidad a variaciones de fase, que son introducidas por ataques como el re-muestreo o la compresión MP3 con tasas de bits muy bajas. Esto se debe a que las INN operan en el dominio del tiempo y no explotan directamente las propiedades de enmascaramiento psicoacústico.
+
+\textbf{DeAR (Liu et al., 2023).} El sistema \textit{DeAR} (\textit{Deep-learning-based Audio Re-recording Resilient Watermarking}) \cite{liu2023dear} se diseñó específicamente para enfrentar uno de los ataques más complejos en el dominio del audio: el re-grabado (\textit{re-recording attack}), en el que el audio se reproduce a través de altavoces físicos y es capturado nuevamente por un micrófono en un entorno acústico real. Este tipo de ataque introduce reverberación, ruido ambiental y distorsiones no lineales del altavoz, lo que resulta en una degradación significativa de cualquier marca de agua convencional. \textit{DeAR} opera en el dominio del espectrograma (representación 2D tiempo-frecuencia) y emplea una red de simulación acústica que modela el entorno de re-grabado durante el entrenamiento. Su desventaja principal es la alta carga computacional tanto en el entrenamiento como en la inferencia, lo que limita su aplicabilidad en escenarios de recursos restringidos.
+
+\textbf{AudioSeal (San Roman et al., 2024).} \textit{AudioSeal} \cite{sanroman2024audioseal}, desarrollado por Meta AI, representa el estado del arte más reciente en detección proactiva de clonación de voz. A diferencia de los sistemas tradicionales que buscan recuperar un mensaje binario, \textit{AudioSeal} está diseñado para detectar si un fragmento de audio (incluso de pocos segundos) ha sido marcado o no, lo que permite identificar audios generados por modelos de IA. Su arquitectura se basa en una red generativa que incrusta la marca directamente en el dominio de la forma de onda (\textit{waveform domain}), junto con un detector localizado que puede identificar la marca en segmentos cortos. Reporta una alta robustez frente a edición de audio, compresión MP3 y adición de ruido. Su principal limitación es que está optimizado para la tarea de detección binaria (marcado/no marcado) y no para la recuperación de mensajes de alta capacidad.
+
+\textbf{SilentCipher (Singh et al., 2024).} \textit{SilentCipher} \cite{singh2024silentcipher} es actualmente uno de los sistemas con mayor imperceptibilidad reportada (\textit{SOTA} en métricas perceptuales). Su contribución central es la integración de un modelo psicoacústico diferenciable durante el entrenamiento, que calcula los umbrales de enmascaramiento de la señal en tiempo real y restringe la energía de la marca de agua a permanecer siempre por debajo de estos umbrales. Esto garantiza, de forma matemáticamente fundamentada, que la marca sea inaudible. El sistema opera en el dominio de la frecuencia y reporta valores de SNR superiores a 38 dB y BER cercana a 0\% bajo ataques estándar. Su principal desafío es la complejidad del modelo psicoacústico integrado, que requiere un ajuste cuidadoso de hiperparámetros para cada tipo de señal de audio.
+
+\textbf{IDEAW (Li et al., 2024).} El sistema \textit{IDEAW} (\textit{Robust Neural Audio Watermarking with Invertible Dual-Embedding}) \cite{li2024ideaw} introduce una estrategia de doble incrustación invertible, en la que la marca de agua se inserta de forma redundante en dos representaciones complementarias de la señal: la forma de onda temporal y el espectrograma. Esta redundancia mejora significativamente la robustez ante ataques que afectan preferentemente a uno u otro dominio. El sistema fue presentado en EMNLP 2024 y representa uno de los trabajos más recientes en el área, demostrando que la combinación de dominios es una dirección prometedora para el diseño de sistemas robustos.
+
+Con el fin de establecer comparativas objetivas entre sistemas, la comunidad científica ha desarrollado marcos de evaluación estandarizados. \textit{AudioMarkBench} \cite{liu2024audiomarkbench} es un \textit{benchmark} reciente que evalúa la robustez de múltiples sistemas de marcado de agua ante una batería de ataques, incluyendo compresión MP3 a diferentes tasas de bits, adición de ruido gaussiano, filtrado pasa-bajos, eco, cambios de velocidad (\textit{time-stretching}) y cambios de tono (\textit{pitch-shifting}). Sus resultados evidencian que ningún sistema actual logra robustez óptima ante todos los tipos de ataques simultáneamente, lo que confirma la relevancia del problema abierto que aborda el presente trabajo.
 \subsubsection{Comparativa de Trabajos Relacionados}
 \label{subsec:comparativa_trabajos}
 
-Para situar la propuesta actual, se presenta en la Tabla \ref{tab:comparativa_detallada} una comparativa entre diversas técnicas representativas del estado del arte, destacando sus fortalezas y debilidades.
+A partir del estudio de los trabajos anteriores, es posible identificar con precisión las principales brechas que la propuesta del presente proyecto busca atender. La Tabla~\ref{tab:comparativa_detallada} presenta una comparativa cuantitativa y cualitativa de los sistemas más relevantes del estado del arte, incluyendo métricas objetivas de imperceptibilidad (SNR), precisión de extracción (BER) sin ataque y bajo compresión MP3, capacidad de ocultamiento en bits por segundo, y los ataques evaluados en cada trabajo. La propuesta del presente proyecto se incluye como última fila para facilitar la comparación directa.
 
-\begin{table}[H]
+\begin{sidewaystable}
     \centering
     \scriptsize
-    \caption{Comparativa de técnicas de marcado de agua en el estado del arte.}
+    \caption{Comparativa cuantitativa y cualitativa de sistemas de marcado de agua profundo en audio. BER = Tasa de Error de Bit; SNR = Relación Señal-Ruido; N/A = No aplica o no reportado; AUC = Área bajo la curva ROC (para sistemas de detección binaria).}
     \label{tab:comparativa_detallada}
-    \begin{tabular}{|L{3cm}|L{2cm}|L{2.5cm}|L{2.5cm}|L{2.5cm}|}
+    \begin{tabular}{|L{2cm}|c|L{2cm}|c|c|L{1.8cm}|L{1.8cm}|L{3.2cm}|L{3.8cm}|}
         \hline
-        \textbf{Trabajo / Método} & \textbf{Paradigma} & \textbf{Dominio} & \textbf{Principal Fortaleza} & \textbf{Limitación} \\
+        \textbf{Sistema} & \textbf{A\~no} & \textbf{Dominio de Operación} & \textbf{Cap. (bps)} & \textbf{SNR (dB)} & \textbf{BER sin ataque (\%)} & \textbf{BER MP3 128 kbps (\%)} & \textbf{Ataques principales evaluados} & \textbf{Diferencia clave vs. propuesta} \\
         \hline
-        Boney et al. \cite{boney1996digital} & Tradicional & Tiempo/Frecuencia & Pionero en el uso de enmascaramiento & Baja robustez a compresión agresiva \\
+        Boney et al. \cite{boney1996digital} & 1996 & Tiempo / Frecuencia & $\sim$20 & $\sim$20 & $<$10 & $>$30 & Ruido aditivo, compresión básica & Sin aprendizaje profundo; muy bajo rendimiento ante ataques de compresión modernos \\
         \hline
-        Singh et al. \cite{singh2024silentcipher} & Deep Learning & Frecuencia/Psycho & Imperceptibilidad superior (SOTA) & Requiere modelos psicoacústicos \\
+        HiDDeN \cite{zhu2018hidden} & 2018 & Imagen (espacial) & N/A & N/A & $<$1 & N/A & JPEG, ruido, recorte espacial & Dise\~nado para imágenes; adaptación a audio requiere redise\~no arquitectónico fundamental \\
         \hline
-        Zhu et al. (HiDDeN) \cite{zhu2018hidden} & Deep Learning & Espacial (Imagen) & Primer modelo end-to-end exitoso & Requiere adaptación para señales 1D (audio) \\
+        WavMark \cite{chen2023wavmark} & 2023 & Waveform (tiempo) & 32 & $\sim$38 & $<$1 & 10--20 & Ruido gaussiano, compresión MP3, remuestreo & Opera en dominio temporal; sensible a cambios de fase por MP3; BER se eleva significativamente bajo compresión \\
         \hline
-        Liu et al. (DeAR) \cite{liu2023dear} & Deep Learning & Espectrograma (2D) & Resiliencia al re-grabado (aire) & Alta carga computacional \\
+        DeAR \cite{liu2023dear} & 2023 & Espectrograma & $\sim$16 & --- & $<$5 & Moderado & Re-grabado físico, ruido ambiental & Especializado en re-grabado físico; poca generalización y alto costo computacional \\
         \hline
-        Chen et al. (WavMark) \cite{chen2023wavmark} & Deep Learning & Tiempo (INN) & Alta capacidad (bits/s) & Sensible a variaciones de fase \\
+        AudioSeal \cite{sanroman2024audioseal} & 2024 & Waveform & Detección & $>$30 & AUC\,$>$0.95 & AUC\,$>$0.90 & Edición, MP3, ruido, recorte & Solo detección binaria (marcado/no marcado); no recupera mensaje de alta capacidad \\
         \hline
-        \textbf{Propuesta (Deep Robust)} & \textbf{Deep Learning} & \textbf{Espectrograma / STFT} & \textbf{Robustez a ataques no intencionales} & \textbf{Requiere entrenamiento costoso} \\
+        SilentCipher \cite{singh2024silentcipher} & 2024 & Frecuencia & 48 & $>$38 & $<$2 & $<$5 & Ruido, MP3, filtrado, time-stretch & Alta imperceptibilidad, pero requiere modelo psicoacústico diferenciable de alta complejidad computacional \\
+        \hline
+        IDEAW \cite{li2024ideaw} & 2024 & Waveform + Espect. & 48 & --- & $<$3 & $<$5 & Ruido, MP3, time-stretch, pitch-shift & Doble incrustación aumenta robustez multi-dominio pero eleva el costo de inferencia y la complejidad arquitectónica \\
+        \hline
+        \textbf{Propuesta} & \textbf{2025} & \textbf{STFT (Solo magnitudes bajas, Fase intacta)} & \textbf{$\sim$32} & \textbf{$>$30} & \textbf{$<$2} & \textbf{$<$5} & \textbf{MP3 (64--128\,kbps), ruido gaussiano, filtrado pasa-bajos} & \textbf{Balance robustez-imperceptibilidad con U-Net en dominio espectral; reproducible con GPU de gama media} \\
         \hline
     \end{tabular}
-\end{table}
+\end{sidewaystable}
+
+Del análisis cuantitativo de la Tabla~\ref{tab:comparativa_detallada} se desprenden las siguientes observaciones que justifican y diferencian la propuesta del presente trabajo:
+
+\begin{itemize}
+    \item \textbf{Robustez ante compresión MP3 y preservación de fase:} Los sistemas que operan en el dominio temporal, como \textit{WavMark} \cite{chen2023wavmark}, reportan una BER de 10--20\% bajo compresión MP3 a 128\,kbps, lo que los hace poco confiables debido a su sensibilidad a la alteración de fase. La propuesta aborda esto operando en el dominio del espectrograma (STFT), incrustando la marca exclusivamente en las magnitudes de las frecuencias bajas y dejando la fase original completamente inalterada. Esto maximiza la robustez ante compresión y fija un objetivo de BER\,$<$\,5\% bajo MP3.
+
+    \item \textbf{Imperceptibilidad vs. complejidad:} \textit{SilentCipher} \cite{singh2024silentcipher} logra el mayor SNR reportado ($>$38\,dB) mediante la integración de un modelo psicoacústico diferenciable durante el entrenamiento. Sin embargo, su replicación requiere recursos computacionales especializados y ajuste fino de hiperparámetros. La propuesta alcanza un SNR objetivo de $>$30\,dB mediante la función de pérdida de reconstrucción estándar, siendo reproducible con una GPU de gama media.
+
+    \item \textbf{Generalización de robustez:} A diferencia de \textit{DeAR} \cite{liu2023dear}, cuya robustez se concentra en el escenario específico del re-grabado físico, y de \textit{AudioSeal} \cite{sanroman2024audioseal}, que solo ofrece detección binaria, la propuesta busca robustez generalizada ante los ataques no intencionales más frecuentes en flujos de distribución digital: compresión MP3, ruido gaussiano y filtrado pasa-bajos.
+
+    \item \textbf{Capacidad y eficiencia arquitectónica:} Sistemas como \textit{IDEAW} \cite{li2024ideaw} alcanzan mayor capacidad (48\,bps) mediante una arquitectura de doble dominio, pero a costa de un alto costo de inferencia. La propuesta adopta $\sim$32\,bps con una arquitectura U-Net de un solo dominio espectral, representando un mejor equilibrio entre capacidad, robustez y eficiencia computacional para el contexto de aplicación definido.
+\end{itemize}
 
 \subsection{Definición del Problema}
 \label{sec:problema}
 
-El principal desafío en el marcado de agua de audio radica en el compromiso (\textit{trade-off}) entre tres pilares fundamentales: imperceptibilidad, robustez y capacidad \cite{cox2007digital}. Las señales de audio son procesadas constantemente mediante compresión con pérdida, filtrado, remuestreo y adición de ruido. Estos procesos, aunque a menudo no tienen una intención maliciosa, degradan la señal de tal forma que las marcas de agua tradicionales pierden su capacidad de ser extraídas correctamente. Existe, por tanto, una necesidad de desarrollar métodos que puedan "aprender" a identificar las características invariantes de la señal que sobreviven a estos procesos, permitiendo una extracción confiable incluso bajo condiciones de degradación severa.
+El problema central que aborda este proyecto puede formularse de manera formal de la siguiente manera. Sea $x \in \mathbb{R}^T$ una señal de audio de longitud $T$ muestras y sea $m \in \{0,1\}^L$ un mensaje binario de $L$ bits que se desea incrustar en dicha señal. El objetivo de un sistema de marcado de agua es encontrar una función de incrustación $E: \mathbb{R}^T \times \{0,1\}^L \rightarrow \mathbb{R}^T$ y una función de extracción $D: \mathbb{R}^T \rightarrow \{0,1\}^L$ tales que se satisfagan simultáneamente las siguientes condiciones:
+
+\begin{itemize}
+    \item \textbf{Imperceptibilidad:} La señal marcada $\hat{x} = E(x, m)$ debe ser perceptualmente indistinguible de la señal original $x$. Formalmente, se requiere que la diferencia $\hat{x} - x$ permanezca por debajo del umbral de enmascaramiento psicoacústico del sistema auditivo humano en todo instante de tiempo.
+
+    \item \textbf{Robustez:} Sea $A(\hat{x})$ la señal resultante de aplicar un ataque de procesamiento $A$ (compresión, ruido, filtrado, etc.) sobre la señal marcada. Se requiere que el extractor sea capaz de recuperar el mensaje con una tasa de error de bit (BER) mínima: $D(A(\hat{x})) \approx m$.
+
+    \item \textbf{Capacidad:} La cantidad de información $L$ que se puede insertar por unidad de tiempo sin violar la condición de imperceptibilidad debe ser maximizada.
+\end{itemize}
+
+Estas tres condiciones forman un triángulo de compromiso (\textit{trade-off triangle}) intrínsecamente conflictivo \cite{cox2007digital}: aumentar la capacidad tiende a degradar la imperceptibilidad; aumentar la robustez requiere insertar la marca con mayor energía, lo que también compromete la imperceptibilidad. Resolver este compromiso de forma eficiente es, precisamente, el reto fundamental del área.
+
+En el contexto específico de este trabajo, el problema se agudiza porque los sistemas distribuidos de contenido digital (plataformas de \textit{streaming}, redes sociales, servicios de nube) aplican de forma rutinaria una o más de las siguientes transformaciones a los archivos de audio antes de que lleguen al usuario final: transcodificación a MP3 o AAC con tasas de bits entre 64 y 192 kbps, normalización de volumen, recorte de frecuencias superiores a cierto umbral, y mezcla con otras fuentes de audio. Cada uno de estos procesos puede destruir parcial o totalmente la información oculta en una marca de agua convencional.
+
+El problema que se plantea resolver es, por tanto, el siguiente: \textit{¿Es posible diseñar y entrenar una red neuronal profunda que aprenda automáticamente a incrustar una marca de agua en las frecuencias bajas de la representación espectral (espectrograma) de una señal de audio, preservando intacta la fase original, de tal forma que la marca sobreviva a las transformaciones de procesamiento de señales más comunes en entornos de distribución digital, manteniendo al mismo tiempo una calidad perceptual equivalente a la del audio original?}
+
+La hipótesis de trabajo es afirmativa: al entrenar un modelo de tipo U-Net o Autoencoder convolucional en el dominio del espectrograma STFT para modificar únicamente las magnitudes de baja frecuencia, manteniendo la fase original sin procesar, y con una capa de ruido diferenciable que simule los ataques de interés durante el entrenamiento, la red puede aprender representaciones del mensaje inherentemente robustas a dichas transformaciones, sin necesidad de un diseño manual de características.
 
 \subsection{Objetivos}
 \label{sec:objetivos}
@@ -62,21 +126,27 @@ El principal desafío en el marcado de agua de audio radica en el compromiso (\t
 \subsubsection{Objetivo General}
 \label{subsec:objective_general}
 
-Desarrollar un sistema de marcado de audio digital basado en redes neuronales profundas robusto a ataques de procesamiento de señales no intencionales.
+Desarrollar un sistema de marcado de audio digital basado en redes neuronales profundas, robusto a ataques de procesamiento de señales no intencionales, que garantice un equilibrio entre imperceptibilidad acústica, capacidad de carga y confiabilidad en la extracción de la marca de agua.
 
 \subsubsection{Objetivos Específicos}
 \label{subsec:objetivos_especificos}
 
 \begin{itemize}
-    \item Realizar una investigación profunda del estado del arte en técnicas de marcado profundo y modelos de enmascaramiento psicoacústico.
-    \item Diseñar e implementar una arquitectura de red neuronal (Autoencoder o U-Net) que integre capas de ruido simulado para fomentar el aprendizaje de características robustas.
-    \item Evaluar el rendimiento del sistema mediante métricas objetivas de calidad (SNR, ODG) y robustez (BER).
+    \item Realizar una investigación exhaustiva del estado del arte en técnicas de marcado de agua profundo en audio, identificando las arquitecturas, dominios de operación y estrategias de robustez más efectivas.
+    \item Diseñar e implementar una arquitectura de red neuronal de extremo a extremo (Autoencoder convolucional o U-Net) que opere en el dominio espectral (STFT), integrando una capa diferenciable de simulación de ataques durante el entrenamiento.
+    \item Preprocesar y segmentar un conjunto de datos diverso de señales de audio (voz, música y sonidos ambientales) para generar un conjunto de entrenamiento y evaluación estandarizado.
+    \item Evaluar el rendimiento del sistema mediante métricas objetivas de calidad perceptual (SNR, ODG/PEAQ) y de robustez (BER), comparando los resultados frente a los sistemas del estado del arte reportados en la literatura.
+    \item Analizar el comportamiento del sistema ante diferentes niveles de intensidad de los ataques, con el fin de establecer los límites operativos del prototipo desarrollado.
 \end{itemize}
 
 \subsection{Justificación}
 \label{sec:justificacion}
 
-La protección del contenido digital es una prioridad para la industria del entretenimiento y la ciberseguridad. Al utilizar \textit{Deep Learning}, es posible crear marcas de agua que se adapten de forma dinámica a la señal de audio, ocultándose en regiones donde el oído humano es menos sensible pero donde la robustez es mayor. Este proyecto no solo contribuye al avance técnico en la protección de señales, sino que también proporciona una base sólida para futuras aplicaciones en la auditoría de contenidos y la lucha contra la desinformación generada por IA.
+La relevancia de este proyecto se sustenta en tres dimensiones complementarias. Desde el punto de vista técnico-científico, el marcado de agua profundo en audio es un problema abierto con múltiples brechas sin resolver, tal como lo evidencia el análisis del estado del arte presentado en la sección anterior y el \textit{benchmark} \textit{AudioMarkBench} \cite{liu2024audiomarkbench}. Ningún sistema actual logra robustez simultánea ante todos los tipos de ataques con bajo costo computacional, lo que hace del presente proyecto una contribución pertinente al avance del conocimiento en el área.
+
+Desde el punto de vista de aplicación industrial, la creciente producción de contenido de audio generado por inteligencia artificial —incluyendo \textit{podcasts} sintéticos, audiolibros generados, clonación de voz y música compuesta por IA— crea una demanda urgente de mecanismos de autenticación que permitan rastrear el origen de los contenidos y detectar usos no autorizados. Sistemas como \textit{AudioSeal} de Meta AI \cite{sanroman2024audioseal} ya están siendo considerados para su integración en plataformas comerciales, lo que demuestra la madurez y la viabilidad comercial de esta línea de investigación.
+
+Finalmente, desde el punto de vista formativo, el desarrollo de este sistema implica la integración de conocimientos de procesamiento digital de señales, aprendizaje profundo, programación en Python y evaluación experimental rigurosa, lo que constituye una experiencia integral para la formación en el área de Desarrollo de Software Multiplataforma con énfasis en inteligencia artificial.
 
 \subsection{Alcances y Limitaciones}
 \label{sec:alcances_limitaciones}
@@ -85,17 +155,18 @@ La protección del contenido digital es una prioridad para la industria del entr
 \label{subsec:alcances}
 
 \begin{itemize}
-    \item Desarrollo de un prototipo funcional en Python utilizando librerías de alto nivel como PyTorch o TensorFlow.
-    \item Entrenamiento del modelo con un conjunto de datos diverso que incluya voz, música y sonidos ambientales.
-    \item Evaluación bajo ataques de compresión MP3, ruido Gaussiano y filtrado pasa-bajos.
+    \item Desarrollo de un prototipo funcional en Python utilizando librerías de alto nivel como PyTorch, librosa y numpy, con código documentado y reproducible.
+    \item Entrenamiento del modelo con un conjunto de datos diverso que incluya voz, música y sonidos ambientales, utilizando un subconjunto del corpus MUSDB18 o conjuntos de datos de dominio público.
+    \item Evaluación sistemática del sistema bajo ataques de compresión MP3 (a 128 kbps y 64 kbps), ruido blanco gaussiano (SNR de 20 dB y 10 dB) y filtrado pasa-bajos (frecuencia de corte de 8 kHz).
+    \item Comparación cuantitativa de los resultados con los valores reportados por sistemas del estado del arte como \textit{WavMark} \cite{chen2023wavmark} y \textit{SilentCipher} \cite{singh2024silentcipher}.
 \end{itemize}
 
 \subsubsection{Limitaciones}
 \label{subsec:limitaciones}
 
 \begin{itemize}
-    \item El sistema requiere hardware especializado (GPU) para un entrenamiento eficiente.
-    \item La robustez contra ataques maliciosos diseñados específicamente para burlar la red (ataques adversarios) está fuera del alcance inicial.
-    \item El procesamiento en tiempo real dependerá de la optimización del modelo final.
+    \item El sistema requiere hardware especializado (GPU con soporte CUDA) para un entrenamiento eficiente; el entrenamiento en CPU resulta inviable en tiempos razonables.
+    \item La robustez contra ataques maliciosos diseñados específicamente para burlar la red (ataques adversariales) está fuera del alcance de este proyecto y constituye una línea de trabajo futuro.
+    \item El procesamiento en tiempo real no es un requisito del prototipo y dependerá de la optimización del modelo final en versiones futuras.
+    \item La evaluación se limita a los ataques especificados; la generalización a otros tipos de ataques no evaluados durante el entrenamiento no está garantizada.
 \end{itemize}
-

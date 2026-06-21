@@ -1,59 +1,254 @@
 \section{Marco Teórico}
 \label{ch:marco_teorico}
 
-Este capítulo establece los fundamentos teóricos necesarios para comprender el desarrollo del sistema de marcado de agua profundo. Se abordan los conceptos de marcado de agua digital, el procesamiento de señales de audio, los modelos psicoacústicos y las arquitecturas de aprendizaje profundo empleadas.
+Este capítulo establece los fundamentos teóricos necesarios para comprender el diseño, implementación y evaluación del sistema de marcado de agua profundo propuesto. Se abordan los principios del marcado de agua digital, el procesamiento de señales de audio en el dominio tiempo-frecuencia, los modelos psicoacústicos del sistema auditivo humano y las arquitecturas de aprendizaje profundo empleadas. El nivel de detalle presentado busca ser suficiente para que un lector con conocimientos básicos de ingeniería pueda comprender y, en su caso, replicar el trabajo desarrollado.
 
 \subsection{Marcado de Agua Digital}
 \label{sec:fundamentos_watermarking}
 
-El marcado de agua digital es una técnica de ocultamiento de información que busca insertar un mensaje (marca) dentro de una señal digital sin alterar significativamente su percepción \cite{cox2007digital}. Según Cox et al. \cite{cox2007digital}, un sistema de marcado de agua se define por tres propiedades fundamentales que forman un compromiso de diseño:
+El marcado de agua digital es una rama de la esteganografía que estudia la inserción de información secundaria, denominada marca de agua (\textit{watermark}), en una señal multimedia (imagen, video, audio) de manera que resulte imperceptible para los sentidos humanos pero recuperable mediante algoritmos especializados \cite{cox2007digital}. A diferencia de la criptografía, que protege el canal de comunicación cifrando el contenido, el marcado de agua protege el contenido en sí mismo: incluso si la señal marcada es distribuida, copiada o transformada, la marca permanece ligada a ella.
+
+\subsubsection{Arquitectura General de un Sistema de Marcado de Agua}
+
+Un sistema de marcado de agua genérico consta de los siguientes componentes funcionales:
+
+\begin{enumerate}
+    \item \textbf{Codificador (Incrustador, \textit{Encoder}):} Recibe la señal original $x$ y el mensaje $m$, y produce la señal marcada $\hat{x} = E(x, m)$. En sistemas tradicionales, este proceso es una operación determinista (por ejemplo, sumar una pseudoseñal al audio). En sistemas basados en aprendizaje profundo, el codificador es una red neuronal entrenada.
+
+    \item \textbf{Canal de Ataque:} Representa todas las transformaciones que puede sufrir la señal marcada entre su generación y su verificación. Incluye compresión con pérdida (MP3, AAC), adición de ruido, filtrado, remuestreo, re-grabado y, en escenarios maliciosos, ataques deliberados de borrado de marca (\textit{watermark removal attacks}).
+
+    \item \textbf{Decodificador (Extractor, \textit{Decoder}):} Recibe la señal potencialmente degradada $\tilde{x} = A(\hat{x})$ y estima el mensaje oculto: $\hat{m} = D(\tilde{x})$. La calidad del extractor se mide por la tasa de error de bit (BER, \textit{Bit Error Rate}).
+\end{enumerate}
+
+\subsubsection{Propiedades Fundamentales y el Triángulo de Compromiso}
+
+Según Cox et al. \cite{cox2007digital}, todo sistema de marcado de agua debe ser diseñado equilibrando tres propiedades fundamentales que forman un \textit{triángulo de compromiso}:
 
 \begin{itemize}
-    \item \textbf{Imperceptibilidad:} La señal marcada debe ser acústicamente idéntica a la señal original para un oyente humano.
-    \item \textbf{Robustez:} La marca de agua debe permanecer detectable incluso después de que la señal haya sufrido degradaciones o ataques de procesamiento.
-    \item \textbf{Capacidad:} La cantidad de información que se puede insertar por unidad de tiempo sin degradar la calidad.
+    \item \textbf{Imperceptibilidad (\textit{Imperceptibility}):} La diferencia entre la señal original $x$ y la señal marcada $\hat{x}$ debe ser inaudible para el sistema auditivo humano. Formalmente, la energía de la perturbación $\delta = \hat{x} - x$ debe ser menor que el umbral de enmascaramiento psicoacústico en todo momento.
+
+    \item \textbf{Robustez (\textit{Robustness}):} La marca de agua debe ser recuperable incluso después de que la señal haya sufrido degradaciones o ataques. Se define cuantitativamente como la capacidad de mantener una BER baja bajo un conjunto de ataques predefinidos. Un sistema es \textit{robusto} si $\text{BER}(D(A(\hat{x})), m) < \epsilon$ para un umbral de tolerancia $\epsilon$ (típicamente $\epsilon < 0.01$ en la literatura reciente).
+
+    \item \textbf{Capacidad (\textit{Capacity}):} Es la cantidad máxima de información (en bits) que puede incrustarse por unidad de tiempo (generalmente expresada en bits por segundo, bps) sin violar la condición de imperceptibilidad. Se rige por los principios de la teoría de la información: a mayor capacidad, menor robustez potencial.
+\end{itemize}
+
+La relación de compromiso es intrínseca: incrementar la robustez requiere insertar la marca con mayor energía, lo que degrada la imperceptibilidad; aumentar la capacidad requiere transportar más información, lo que también aumenta la energía de la perturbación. El diseño óptimo de un sistema de marcado de agua consiste en encontrar el equilibrio más favorable entre estas tres propiedades para el contexto de aplicación específico.
+
+\subsubsection{Clasificación de los Métodos de Marcado de Agua en Audio}
+
+Los métodos de marcado de agua en audio pueden clasificarse según el dominio en el que operan:
+
+\begin{itemize}
+    \item \textbf{Dominio del tiempo (\textit{time domain}):} La marca se inserta directamente en las muestras de la señal. El método más simple es la modificación del bit menos significativo (LSB). Ofrece alta capacidad pero muy baja robustez.
+
+    \item \textbf{Dominio de la frecuencia (\textit{frequency domain}):} La marca se inserta en los coeficientes espectrales de la señal tras aplicar una transformada (DFT, DCT, DWT). Permite aprovechar propiedades psicoacústicas y ofrece mayor robustez frente a ataques de procesamiento estándar.
+
+    \item \textbf{Dominio tiempo-frecuencia (\textit{time-frequency domain}):} La marca se inserta en la representación tiempo-frecuencia de la señal (espectrograma STFT). Este enfoque combina las ventajas del análisis espectral con la localización temporal, siendo el adoptado en la mayoría de los sistemas modernos basados en aprendizaje profundo.
 \end{itemize}
 
 \subsection{Procesamiento Digital de Audio}
 \label{sec:procesamiento_audio}
 
-El audio digital es una representación discreta de una onda sonora continua. El proceso de digitalización implica el muestreo (\textit{sampling}) y la cuantificación.
+El audio digital es una representación discreta de una onda de presión sonora continua. Antes de poder aplicar cualquier algoritmo de marcado de agua, la señal debe entenderse en sus representaciones fundamentales: el dominio del tiempo y el dominio de la frecuencia.
 
-\subsubsection{Muestreo y Teorema de Nyquist}
-El teorema de Nyquist-Shannon establece que para reconstruir una señal sin errores (\textit{aliasing}), la frecuencia de muestreo $f_s$ debe ser al menos el doble de la frecuencia máxima $f_{max}$ presente en la señal ($f_s \geq 2f_{max}$). Para audio de alta fidelidad, se utilizan comúnmente $44,100$ Hz o $48,000$ Hz.
+\subsubsection{Muestreo y el Teorema de Nyquist-Shannon}
 
-\subsubsection{Transformada de Fourier de Tiempo Corto (STFT)}
-Dado que el audio es una señal no estacionaria (sus propiedades cambian con el tiempo), se utiliza la STFT para analizar su contenido en el dominio tiempo-frecuencia. La señal se divide en segmentos cortos llamados tramas (\textit{frames}), a las que se aplica una función de ventana $w(n)$ y la Transformada Discreta de Fourier (DFT).
-
+El proceso de digitalización de una señal de audio analógica $x_a(t)$ consiste en dos pasos: el muestreo y la cuantificación. El muestreo consiste en tomar el valor de la señal continua a intervalos regulares de tiempo $T_s$, produciendo la secuencia discreta:
 \begin{equation}
-    X(m, \omega) = \sum_{n=-\infty}^{\infty} x(n) w(n - mR) e^{-j\omega n}
+    x[n] = x_a(n \cdot T_s), \quad n \in \mathbb{Z}
+\end{equation}
+donde $f_s = 1/T_s$ es la frecuencia de muestreo (en Hz).
+
+El \textbf{Teorema de Nyquist-Shannon} establece que, para reconstruir perfectamente la señal analógica original a partir de sus muestras discretas, la frecuencia de muestreo $f_s$ debe ser estrictamente mayor que el doble de la frecuencia máxima $f_{max}$ contenida en la señal:
+\begin{equation}
+    f_s > 2 f_{max}
+\end{equation}
+Si esta condición no se cumple, se produce el fenómeno de \textit{aliasing}, en el que componentes de alta frecuencia se superponen sobre frecuencias bajas, distorsionando irreversiblemente la señal. Para audio de alta fidelidad, el oído humano percibe frecuencias hasta aproximadamente 20 kHz, por lo que las frecuencias de muestreo estándar son 44,100 Hz (estándar CD) y 48,000 Hz (estándar para producción audiovisual y radiodifusión).
+
+La cuantificación asigna un valor entero a cada muestra dentro de un rango finito. Para audio de 16 bits, cada muestra toma un valor en el rango $[-32768, 32767]$, lo que proporciona una relación señal-ruido de cuantificación (SQNR) de aproximadamente $6.02 \times 16 \approx 96.3$ dB, suficiente para la mayoría de aplicaciones de alta fidelidad.
+
+\subsubsection{Transformada Discreta de Fourier (DFT)}
+
+La Transformada Discreta de Fourier (DFT) descompone una señal discreta en sus componentes de frecuencia. Para una secuencia $x[n]$ de longitud $N$, la DFT se define como:
+\begin{equation}
+    X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j\frac{2\pi}{N}kn}, \quad k = 0, 1, \ldots, N-1
+\end{equation}
+donde $X[k]$ es el coeficiente complejo correspondiente a la frecuencia discreta $f_k = k \cdot f_s / N$. La magnitud $|X[k]|$ representa la amplitud de la componente de frecuencia $f_k$, y la fase $\angle X[k]$ representa su desplazamiento temporal. La DFT se calcula eficientemente mediante el algoritmo de la Transformada Rápida de Fourier (FFT), con complejidad $\mathcal{O}(N \log N)$ en lugar de los $\mathcal{O}(N^2)$ de la DFT directa.
+
+\subsubsection{Transformada de Fourier de Tiempo Corto (STFT) y el Espectrograma}
+
+El audio es una señal no estacionaria: sus propiedades estadísticas y espectrales cambian con el tiempo (por ejemplo, una melodía pasa de una nota a otra, o un hablante cambia de fonema). La DFT global de toda la señal pierde la información sobre \textit{cuándo} ocurre cada componente de frecuencia. Para obtener una representación tiempo-frecuencia, se utiliza la \textbf{Transformada de Fourier de Tiempo Corto (STFT)}.
+
+La STFT divide la señal en bloques o tramas cortas (\textit{frames}) mediante una función de ventana $w[n]$, y calcula la DFT de cada trama por separado. Formalmente:
+\begin{equation}
+    X(m, k) = \sum_{n=0}^{N-1} x[n + mH] \cdot w[n] \cdot e^{-j\frac{2\pi}{N}kn}
+\end{equation}
+donde:
+\begin{itemize}
+    \item $m$ es el índice de trama (posición temporal),
+    \item $H$ es el tamaño del salto (\textit{hop size}, en muestras), que determina el solapamiento entre tramas consecutivas,
+    \item $N$ es el tamaño de la ventana (\textit{window size}), que determina la resolución en frecuencia ($\Delta f = f_s / N$),
+    \item $w[n]$ es la función de ventana (típicamente Hann o Hamming), que reduce los efectos de borde al forzar suavemente a cero los bordes de cada trama.
+\end{itemize}
+
+El resultado es una matriz compleja $X \in \mathbb{C}^{(N/2+1) \times M}$, donde $M = \lfloor (T - N) / H \rfloor + 1$ es el número de tramas. El \textbf{espectrograma} es la representación de la energía (magnitud al cuadrado) en el plano tiempo-frecuencia:
+\begin{equation}
+    S(m, k) = |X(m, k)|^2
 \end{equation}
 
-donde $m$ es el índice de la trama y $R$ es el tamaño del salto (\textit{hop size}).
+En el contexto del marcado de agua profundo, el espectrograma o la magnitud $|X(m, k)|$ son usados como entrada de las redes neuronales, dado que tienen una estructura similar a la de una imagen en escala de grises: dos dimensiones (tiempo y frecuencia) con valores positivos que pueden ser procesados eficientemente por redes convolucionales. La Transformada Inversa de Fourier de Tiempo Corto (ISTFT) permite reconstruir la señal de audio en el dominio del tiempo a partir de la representación modificada en el dominio tiempo-frecuencia.
+
+\subsubsection{Ventanas de Análisis y el Criterio COLA}
+
+La elección de la función de ventana $w[n]$ y del tamaño de salto $H$ no es arbitraria. Para garantizar una reconstrucción perfecta de la señal mediante el método de \textit{Overlap-Add} (OLA), debe cumplirse el criterio de \textbf{Constant Overlap-Add (COLA)}:
+\begin{equation}
+    \sum_{m=-\infty}^{\infty} w[n - mH] = C, \quad \forall n
+\end{equation}
+donde $C$ es una constante. La ventana de Hann con solapamiento del 50\% ($H = N/2$) satisface este criterio, lo que significa que la suma de todas las ventanas desplazadas es constante, garantizando que no haya artefactos en la reconstrucción de la señal de audio marcada.
 
 \subsection{Enmascaramiento Psicoacústico}
 \label{sec:psicoacustica}
 
-El sistema auditivo humano (HAS) tiene limitaciones que pueden aprovecharse para ocultar información. El enmascaramiento ocurre cuando un sonido fuerte (enmascarante) hace que un sonido más débil (enmascarado) sea inaudible si están cerca en tiempo o frecuencia. Los umbrales de enmascaramiento definen la máxima energía de ruido que se puede añadir a una frecuencia específica sin que sea perceptible.
+El sistema auditivo humano (HAS) no percibe todos los sonidos con igual sensibilidad. Esta característica, estudiada por la psicoacústica, puede explotarse en el marcado de agua para insertar la marca de forma imperceptible: si la energía de la perturbación introducida por la marca permanece por debajo del umbral de percepción auditiva en cada frecuencia y en cada instante de tiempo, el oyente no podrá detectar ninguna diferencia entre el audio original y el audio marcado.
+
+\subsubsection{El Sistema Auditivo Humano y la Curva de Umbral Absoluto}
+
+El oído humano no es igualmente sensible a todas las frecuencias. La \textbf{curva de umbral absoluto de audición} (\textit{Absolute Threshold of Hearing}, ATH) define la intensidad mínima (en dB SPL) que un sonido debe tener para ser audible en ausencia de otros sonidos, en función de la frecuencia. El oído humano es más sensible en la región de 1 a 4 kHz (donde la ATH alcanza valores mínimos de aproximadamente -5 dB SPL) y menos sensible a frecuencias muy bajas (por debajo de 100 Hz) y muy altas (por encima de 10 kHz). Esta curva ha sido modelada matemáticamente y es la base del diseño de codificadores de audio perceptual como MP3 y AAC.
+
+\subsubsection{Enmascaramiento en Frecuencia y Enmascaramiento Temporal}
+
+El fenómeno de \textbf{enmascaramiento} ocurre cuando un sonido fuerte (el \textit{enmascarante}) hace que un sonido más débil (el \textit{enmascarado}) se vuelva inaudible, aunque ambos sean perceptibles de forma aislada.
+
+\begin{itemize}
+    \item \textbf{Enmascaramiento en frecuencia (\textit{simultaneous masking}):} Ocurre cuando el enmascarante y el enmascarado se presentan simultáneamente. Los sonidos con frecuencias cercanas al enmascarante son los más fácilmente enmascarados. El umbral de enmascaramiento se eleva en un rango de frecuencias alrededor del enmascarante, más pronunciado hacia frecuencias altas que hacia frecuencias bajas (efecto de asimetría del enmascaramiento).
+
+    \item \textbf{Enmascaramiento temporal (\textit{temporal masking}):} El umbral de enmascaramiento no se resetea instantáneamente al desaparecer el enmascarante. El \textit{pre-masking} ocurre hasta $\sim$20 ms antes del enmascarante, y el \textit{post-masking} puede durar hasta $\sim$200 ms después. Durante el post-masking, un sonido débil sigue siendo inaudible incluso después de que el sonido fuerte haya cesado.
+\end{itemize}
+
+Los modelos psicoacústicos, como el definido en el estándar ISO/IEC 11172-3 (MPEG-1 Audio Layer III, también conocido como MP3), calculan los umbrales de enmascaramiento de forma dinámica para cada trama de audio. En sistemas de marcado de agua avanzados como \textit{SilentCipher} \cite{singh2024silentcipher}, estos umbrales son calculados de forma diferenciable dentro del grafo de entrenamiento de la red neuronal, permitiendo que la función de pérdida penalice explícitamente cualquier inserción de marca de agua que supere el umbral de enmascaramiento en cualquier frecuencia.
+
+\subsubsection{Bandas Críticas y la Escala Bark}
+
+La cóclea del oído interno actúa como un banco de filtros que descompone la señal de audio en componentes de frecuencia. Las \textbf{bandas críticas} (\textit{critical bands}) modelan la resolución frecuencial del oído: dos sonidos en la misma banda crítica interactúan fuertemente (se enmascaran entre sí), mientras que sonidos en bandas críticas distintas apenas interactúan. El ancho de cada banda crítica es aproximadamente 100 Hz para frecuencias bajas y aumenta proporcionalmente para frecuencias altas. La escala \textbf{Bark} es una escala de frecuencia perceptual que divide el rango audible en 24 bandas críticas de ancho subjetivamente igual, y es utilizada en los modelos psicoacústicos para calcular los umbrales de enmascaramiento de forma más precisa que con la escala lineal o logarítmica.
 
 \subsection{Aprendizaje Profundo (Deep Learning)}
 \label{sec:deep_learning_theory}
 
-El aprendizaje profundo utiliza redes neuronales con múltiples capas para extraer características automáticas de los datos \cite{goodfellow2016deep}.
+El aprendizaje profundo es un subcampo del aprendizaje automático que utiliza redes neuronales artificiales con múltiples capas de procesamiento para extraer representaciones jerárquicas de los datos \cite{goodfellow2016deep}. Cada capa transforma su entrada en una representación de mayor nivel de abstracción, permitiendo que el modelo aprenda a resolver tareas complejas directamente a partir de datos crudos, sin necesidad de un diseño manual de características.
+
+\subsubsection{El Perceptrón y la Neurona Artificial}
+
+La unidad básica de una red neuronal es la neurona artificial, inspirada en la neurona biológica. Formalmente, una neurona recibe un vector de entradas $\mathbf{x} \in \mathbb{R}^n$, computa una combinación lineal ponderada por un vector de pesos $\mathbf{w} \in \mathbb{R}^n$ y un sesgo $b$, y produce una salida mediante la aplicación de una función de activación $\sigma$:
+\begin{equation}
+    y = \sigma(\mathbf{w}^T \mathbf{x} + b)
+\end{equation}
+
+Las funciones de activación más comunes son:
+\begin{itemize}
+    \item \textbf{ReLU (\textit{Rectified Linear Unit}):} $\sigma(z) = \max(0, z)$. Computacionalmente eficiente y evita el problema del gradiente que se desvanece (\textit{vanishing gradient}) en capas profundas.
+    \item \textbf{Sigmoid:} $\sigma(z) = 1/(1 + e^{-z})$. Produce salidas en el rango $(0, 1)$; útil en capas de salida para clasificación binaria.
+    \item \textbf{Tanh:} $\sigma(z) = \tanh(z)$. Produce salidas en $(-1, 1)$; similar a sigmoid pero centrada en cero.
+    \item \textbf{LeakyReLU:} $\sigma(z) = \max(\alpha z, z)$ con $\alpha \ll 1$. Mitiga el problema de neuronas muertas (\textit{dying ReLU}) del ReLU estándar.
+\end{itemize}
+
+\subsubsection{Entrenamiento: Descenso de Gradiente y Retropropagación}
+
+El entrenamiento de una red neuronal consiste en ajustar los parámetros $\theta = \{\mathbf{W}, \mathbf{b}\}$ de la red para minimizar una función de pérdida $\mathcal{L}(\theta)$ que mide el error entre las predicciones de la red y los valores esperados. El algoritmo estándar es el \textbf{descenso de gradiente estocástico (SGD)} y sus variantes (Adam, RMSProp), que actualiza los parámetros en la dirección opuesta al gradiente de la función de pérdida:
+\begin{equation}
+    \theta_{t+1} = \theta_t - \eta \nabla_\theta \mathcal{L}(\theta_t)
+\end{equation}
+donde $\eta$ es la tasa de aprendizaje (\textit{learning rate}). El gradiente $\nabla_\theta \mathcal{L}$ se calcula de forma eficiente mediante el algoritmo de \textbf{retropropagación} (\textit{backpropagation}), que aplica la regla de la cadena del cálculo diferencial para propagar el error desde la capa de salida hasta la capa de entrada a través de todas las capas intermedias.
 
 \subsubsection{Redes Neuronales Convolucionales (CNN)}
-Las CNN son ideales para procesar datos con estructura de rejilla, como los espectrogramas de audio. Utilizan operaciones de convolución para detectar patrones locales (texturas, tonos) invariantes a la traslación.
 
-\subsubsection{Autoencoders y U-Net}
-Un Autoencoder consta de un codificador que comprime la entrada en un espacio latente y un decodificador que intenta reconstruirla. La arquitectura \textit{U-Net} \cite{ronneberger2015u} mejora este proceso mediante conexiones de salto (\textit{skip connections}) que preservan detalles de alta resolución, lo cual es vital para mantener la fidelidad del audio en el marcado de agua.
+Las Redes Neuronales Convolucionales (CNN, \textit{Convolutional Neural Networks}) son la arquitectura predominante para el procesamiento de datos con estructura espacial o de rejilla, como imágenes y espectrogramas. Su componente central es la capa de convolución, que aplica un conjunto de filtros aprendibles $\mathbf{K} \in \mathbb{R}^{C_{in} \times k_h \times k_w}$ sobre la entrada mediante la operación de correlación cruzada:
+\begin{equation}
+    (X * K)[i, j] = \sum_{c=1}^{C_{in}} \sum_{p=0}^{k_h-1} \sum_{q=0}^{k_w-1} X[c, i+p, j+q] \cdot K[c, p, q]
+\end{equation}
+donde $C_{in}$ es el número de canales de entrada, $k_h$ y $k_w$ son las dimensiones del filtro (típicamente $3 \times 3$ o $5 \times 5$), e $(i, j)$ es la posición espacial de salida. Las capas convolucionales tienen tres propiedades clave que las hacen adecuadas para el procesamiento de señales:
+
+\begin{itemize}
+    \item \textbf{Localidad:} Cada neurona de salida depende solo de una región local de la entrada (campo receptivo), lo que permite detectar patrones locales como bordes o texturas.
+    \item \textbf{Compartición de parámetros:} El mismo filtro se aplica en todas las posiciones de la entrada, reduciendo drásticamente el número de parámetros entrenables.
+    \item \textbf{Invariancia a la traslación:} Los patrones detectados por un filtro son detectados independientemente de su posición en la entrada, lo que es útil para reconocer estructuras de audio independientemente del instante temporal.
+\end{itemize}
+
+Además de las capas convolucionales, las CNN incluyen capas de \textbf{pooling} (que reducen la resolución espacial aumentando la invariancia y disminuyendo el costo computacional), \textbf{normalización por lotes} (\textit{batch normalization}, que estabiliza el entrenamiento normalizando las activaciones por mini-lote), y capas de \textbf{dropout} (que desactivan aleatoriamente un porcentaje de neuronas durante el entrenamiento para prevenir el sobreajuste).
+
+\subsubsection{Autoencoders}
+
+Un Autoencoder es una arquitectura de red neuronal diseñada para aprender una representación comprimida (codificada) de los datos de entrada. Consta de dos subredes simétricas:
+
+\begin{itemize}
+    \item \textbf{Codificador (\textit{Encoder}):} Mapea la entrada $\mathbf{x} \in \mathbb{R}^D$ a una representación latente de menor dimensión $\mathbf{z} \in \mathbb{R}^d$, con $d \ll D$: $\mathbf{z} = f_\phi(\mathbf{x})$.
+
+    \item \textbf{Decodificador (\textit{Decoder}):} Reconstruye la entrada a partir de la representación latente: $\hat{\mathbf{x}} = g_\psi(\mathbf{z})$.
+\end{itemize}
+
+El entrenamiento minimiza una función de pérdida de reconstrucción, típicamente el error cuadrático medio (MSE): $\mathcal{L}_{rec} = \|\mathbf{x} - \hat{\mathbf{x}}\|_2^2$. En el contexto del marcado de agua, el Autoencoder se adapta para que el codificador reciba tanto la señal de audio como el mensaje a incrustar, y el decodificador actúe como extractor del mensaje a partir de la señal marcada (posiblemente degradada).
+
+\subsubsection{Arquitectura U-Net}
+
+La \textbf{U-Net} \cite{ronneberger2015u} es una variante del Autoencoder originalmente propuesta para segmentación de imágenes biomédicas, que ha demostrado ser altamente eficaz en tareas de procesamiento de señales. Su nombre proviene de la forma de ``U'' que adopta su diagrama de arquitectura. La innovación principal de la U-Net respecto al Autoencoder estándar son las \textbf{conexiones de salto} (\textit{skip connections}): en cada nivel de resolución, la salida de la capa del codificador correspondiente se concatena directamente con la entrada de la capa del decodificador del mismo nivel.
+
+\begin{equation}
+    \hat{\mathbf{h}}_l = \text{Decode}([\mathbf{h}_l, \mathbf{z}_l])
+\end{equation}
+donde $[\cdot, \cdot]$ denota concatenación a lo largo de la dimensión de canales, $\mathbf{h}_l$ es la salida del codificador en el nivel $l$, y $\mathbf{z}_l$ es la representación del decodificador en el nivel $l$.
+
+Las conexiones de salto permiten que los gradientes fluyan directamente desde la salida hasta las capas más tempranas del codificador, facilitando el entrenamiento de redes muy profundas. Más importante aún, permiten que el decodificador acceda a información de alta resolución que fue comprimida durante la fase de codificación, lo que resulta en una reconstrucción de mayor calidad. En el marcado de agua de audio, esta propiedad es crítica: los detalles espectrales finos del audio original deben preservarse en el audio marcado para garantizar la imperceptibilidad.
+
+\subsubsection{Redes Neuronales Invertibles (INN)}
+
+Las Redes Neuronales Invertibles (\textit{Invertible Neural Networks}, INN) son un tipo especial de red neuronal donde la función implementada por la red es matemáticamente invertible por diseño. Esto significa que, dado un vector de salida $\mathbf{y}$, es posible calcular el vector de entrada $\mathbf{x} = f^{-1}(\mathbf{y})$ de forma exacta y eficiente. Las INN se implementan mediante bloques de acoplamiento (\textit{coupling layers}), como los bloques de acoplamiento aditivo o afín de la arquitectura RealNVP. La invertibilidad garantiza que no haya pérdida de información durante la incrustación de la marca de agua, lo que se traduce en una alta fidelidad de reconstrucción del audio marcado. El sistema \textit{WavMark} \cite{chen2023wavmark} y \textit{IDEAW} \cite{li2024ideaw} explotan esta propiedad.
+
+\subsection{Función de Pérdida en Sistemas de Marcado de Agua Profundo}
+\label{sec:loss_function}
+
+El entrenamiento de un sistema de marcado de agua basado en aprendizaje profundo requiere una función de pérdida (\textit{loss function}) que capture simultáneamente los objetivos de imperceptibilidad y robustez. La formulación más común, adoptada a partir de \textit{HiDDeN} \cite{zhu2018hidden}, es una combinación ponderada de dos términos:
+
+\begin{equation}
+    \mathcal{L}_{total} = \lambda_{imp} \cdot \mathcal{L}_{imperceptibility} + \lambda_{rob} \cdot \mathcal{L}_{robustez}
+\end{equation}
+
+donde:
+\begin{itemize}
+    \item $\mathcal{L}_{imperceptibility} = \|x - \hat{x}\|_2^2$ es el error cuadrático medio entre la señal original y la señal marcada, que penaliza las diferencias perceptibles.
+    \item $\mathcal{L}_{robustez} = \text{BCE}(D(A(\hat{x})), m)$ es la entropía cruzada binaria entre el mensaje recuperado y el mensaje original, que penaliza los errores de extracción.
+    \item $\lambda_{imp}$ y $\lambda_{rob}$ son hiperparámetros que controlan el peso relativo de cada término.
+\end{itemize}
+
+Algunos sistemas más avanzados incluyen términos adicionales en la función de pérdida:
+\begin{itemize}
+    \item \textbf{Pérdida perceptual (\textit{perceptual loss}):} Calcula la diferencia entre las activaciones de una red preentrenada (e.g., VGGNet) al procesar el audio original y el audio marcado, capturando diferencias perceptuales de alto nivel que el MSE no detecta.
+    \item \textbf{Pérdida psicoacústica:} Penaliza la perturbación introducida por la marca de agua cuando supera el umbral de enmascaramiento calculado por un modelo psicoacústico, como en \textit{SilentCipher} \cite{singh2024silentcipher}.
+\end{itemize}
 
 \subsection{Métricas de Evaluación}
 \label{sec:metricas}
 
-Para validar el sistema, se emplean métricas que miden la distorsión y la fidelidad de la recuperación:
+Para validar el desempeño del sistema, se emplean métricas objetivas que miden tanto la calidad perceptual del audio marcado como la confiabilidad de la extracción de la marca:
 
-\begin{itemize}
-    \item \textbf{Relación Señal-Ruido (SNR):} Mide la potencia de la señal respecto a la potencia del ruido introducido por la marca.
-    \item \textbf{Tasa de Error de Bit (BER):} Porcentaje de bits recuperados incorrectamente tras la extracción.
-    \item \textbf{Grado de Distorsión Objetiva (ODG):} Métrica basada en el estándar ITU-R BS.1387 (\textit{PEAQ}) que simula la percepción humana del audio.
-\end{itemize}
+\subsubsection{Relación Señal-Ruido (SNR)}
+
+La Relación Señal-Ruido (\textit{Signal-to-Noise Ratio}, SNR) cuantifica la magnitud de la perturbación introducida por la marca de agua en la señal de audio:
+\begin{equation}
+    \text{SNR} = 10 \log_{10} \frac{\sum_{n=1}^{T} x[n]^2}{\sum_{n=1}^{T} (x[n] - \hat{x}[n])^2} \quad \text{[dB]}
+\end{equation}
+Un valor alto de SNR indica que la perturbación es pequeña en relación con la señal original. En general, valores de SNR superiores a 30 dB se consideran indicativos de buena imperceptibilidad, aunque este umbral depende del tipo de señal y del contexto de escucha.
+
+\subsubsection{Tasa de Error de Bit (BER)}
+
+La Tasa de Error de Bit (\textit{Bit Error Rate}, BER) mide la proporción de bits del mensaje que son recuperados incorrectamente por el extractor:
+\begin{equation}
+    \text{BER} = \frac{1}{L} \sum_{i=1}^{L} \mathbf{1}[\hat{m}_i \neq m_i]
+\end{equation}
+donde $L$ es el número de bits del mensaje, $m_i$ es el bit original y $\hat{m}_i$ es el bit recuperado. Una BER de 0\% indica una extracción perfecta, mientras que una BER de 50\% es equivalente a una extracción aleatoria (el extractor no provee ninguna información útil). En la práctica, se considera que un sistema es funcional cuando su BER es inferior al 5\% bajo los ataques evaluados.
+
+\subsubsection{Grado de Distorsión Objetiva (ODG) y PEAQ}
+
+El Grado de Distorsión Objetiva (\textit{Objective Difference Grade}, ODG) es una métrica perceptual basada en el estándar ITU-R BS.1387, implementada mediante el algoritmo \textit{PEAQ} (\textit{Perceptual Evaluation of Audio Quality}). PEAQ modela el sistema auditivo humano para calcular, de forma automatizada, cuál sería la calificación que un oyente humano daría a la diferencia entre el audio original y el audio marcado, en una escala de 0 (sin diferencia perceptible) a -4 (muy molesto). La ventaja de ODG sobre el SNR es que incorpora el modelo psicoacústico del sistema auditivo, siendo más correlacionado con la percepción real del oyente.
+
+\subsubsection{Precisión de Detección (para sistemas de detección binaria)}
+
+En sistemas como \textit{AudioSeal} \cite{sanroman2024audioseal}, donde el objetivo es detectar si un fragmento de audio ha sido marcado (y no recuperar un mensaje), la métrica principal es la precisión de detección (\textit{detection accuracy}), definida como la proporción de fragmentos correctamente clasificados como marcados o no marcados. Se complementa con la tasa de falsos positivos (clasificar como marcado un audio no marcado) y la tasa de falsos negativos (no detectar la marca en un audio que sí la contiene).
