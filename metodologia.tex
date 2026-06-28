@@ -1,51 +1,68 @@
-\section{Metodología}
+\section{Propuesta de Solución y Metodología}
+\label{ch:metodologia}
 
-Los métodos y herramientas utilizadas son la descripción detallada de las etapas
-(o pasos, procedimiento) de desarrollo en que se dividió el proyecto y están
-íntimamente relacionadas con los objetivos operativos. Se compara con una
-receta de cocina, es decir, describir a detalle las actividades y acciones realizadas
-en cada etapa de desarrollo, empleando un orden cronológico y en función de los
-objetivos operativos. Sus características son:
+La propuesta de solución para este proyecto consiste en el diseño y entrenamiento de una arquitectura de red neuronal profunda tipo U-Net que opera en el dominio tiempo-frecuencia (STFT) para incrustar marcas de agua digitales en señales de audio. A diferencia de los métodos algorítmicos clásicos o las redes puramente temporales, la arquitectura propuesta preserva íntegramente la fase original de la señal acústica, alterando exclusivamente las magnitudes espectrales. Esta estrategia de solución garantiza simultáneamente una alta imperceptibilidad auditiva y una robustez excepcional ante ataques destructivos severos, como la compresión con pérdida (MP3) a altas tasas.
+
+Para materializar y evaluar esta propuesta, la metodología se divide en etapas secuenciales que permiten transformar las señales de audio en representaciones tensoriales aptas para el aprendizaje profundo. Cada etapa está diseñada para garantizar la integridad de los datos y la viabilidad del entrenamiento.
+
+\subsection{Etapa 1: Segmentación del Audio (Preprocesamiento)}
+\label{sec:etapa1_segmentacion}
+
+Debido a que las redes neuronales profundas requieren tensores de entrada con dimensiones fijas, la primera etapa consiste en una segmentación uniforme de los archivos de audio originales.
+
 \begin{itemize}
-\item Descripción detallada de las etapas (o pasos) desarrolladas, las cuales están
-relacionadas con cada objetivo operativos. Dependiendo del número de
-objetivos, será el número de etapas de desarrollo reportadas.
-\item En cada etapa de desarrollo, describir las herramientas académicas, técnicas
-y computacionales que se utilizaron, indicando roles y responsabilidades.
-Además, describir las asignaturas o aprendizajes que se obtuvieron durante tu
-formación académica y fueron útiles en el proceso. Así mismo, describir
-herramientas, equipos, tecnologías, etc., que se utilizaron durante el proyecto o
-se aprendieron en la unidad económica.
+    \item \textbf{Procedimiento:} Se cargan los archivos de audio utilizando la librería \textit{librosa}, ampliamente utilizada en el análisis de audio computacional. Cada señal se divide en fragmentos de duración objetivo $t_{target} = 5$ segundos.
+    \item \textbf{Criterio de Descarte:} Para evitar el uso de técnicas de relleno (\textit{padding}) que podrían inducir sesgos, se implementó un criterio estricto donde cualquier residuo final de la señal que no complete los 5 segundos es ignorado.
+    \item \textbf{Métricas de Amplitud:} Durante este proceso se registran las amplitudes máximas y mínimas de cada canal (izquierdo y derecho) para detectar posibles recortes (\textit{clipping}) y analizar el rango dinámico, lo cual es vital para determinar la ganancia de inserción de la marca de agua.
 \end{itemize}
 
-\textit{El informe debe estar soportado por referencias, ademas incluir figuras y tablas. En los siguientes parrafos se ejemplifica como usar dichos elementos. }
+\subsection{Etapa 2: Procesamiento por Bloques (Framing) y Solapamiento (Overlap)}
+\label{sec:etapa2_framing}
 
-De acuerdo con Ivan \cite{Sistema:2018:Ivan}, todos mienten, de la misma forma que Dr. House lo afirma de manera continua a lo largo de las 8 temporadas de la serie. 
+Para analizar la señal bajo la suposición de que es cuasi-estacionaria, se aplica una técnica de segmentación en bloques de corta duración.
 
-Los sistemas de información constituyen un conjunto organizado de recursos —personas, datos, procesos y tecnología— que interactúan para recolectar, procesar, almacenar y distribuir información relevante dentro de una organización. Su propósito principal es apoyar la toma de decisiones, la coordinación y el control, así como facilitar el análisis y la visualización de información estratégica \cite{laudon2020, stair2018}. En el contexto actual, caracterizado por la digitalización y la globalización, los sistemas de información han evolucionado hacia plataformas integradas que permiten la gestión eficiente del conocimiento y la automatización de procesos empresariales \cite{turban2019}. Además, el uso de tecnologías emergentes como la inteligencia artificial y el análisis de datos ha ampliado sus capacidades, permitiendo generar valor a partir de grandes volúmenes de información \cite{davenport2018}.
+\begin{itemize}
+    \item \textbf{Configuración:} Se definieron bloques de $N = 512$ muestras. A una frecuencia de muestreo de 44100 Hz, esto equivale a aproximadamente 11.6 ms, tiempo suficiente para asumir estabilidad acústica.
+    \item \textbf{Solapamiento:} Se utiliza un salto de $H = 256$ muestras, lo que resulta en un solapamiento (\textit{overlap}) del 50\%.
+    \item \textbf{Importancia:} El solapamiento es crucial para evitar la pérdida de información en los bordes de los bloques tras la aplicación de funciones de ventana (como Hamming o Hann) y para garantizar una reconstrucción suave de la señal (\textit{Constant Overlap-Add}, COLA) tras el proceso de marcado.
+\end{itemize}
 
-Por otra parte, la implementación de sistemas de información implica retos importantes relacionados con la alineación estratégica, la seguridad de la información y la gestión del cambio organizacional. Es fundamental que estos sistemas estén alineados con los objetivos del negocio para maximizar su impacto y retorno de inversión \cite{ward2016}. Asimismo, la protección de datos y la ciberseguridad se han convertido en aspectos críticos debido al incremento de amenazas digitales \cite{whitman2018}. Finalmente, el éxito de un sistema de información depende en gran medida de la aceptación por parte de los usuarios y de una adecuada gestión del cambio, lo que requiere capacitación, comunicación efectiva y liderazgo organizacional \cite{heeks2006}.
+\subsection{Etapa 3: Adaptación e Implementación de la Arquitectura IDEAW}
+\label{sec:etapa3_diseno_red}
 
+En esta fase se estableció la arquitectura del modelo que realiza la inserción y extracción de la marca de agua. Como punto de partida para el autoencoder y el flujo de entrenamiento, se empleó el código base del proyecto \textit{IDEAW} \cite{li2024ideaw}, proveniente de la revisión del estado del arte. No obstante, el repositorio original fue sometido a modificaciones sustanciales por parte del autor para cumplir con los objetivos específicos de esta tesina.
 
-En la figura \ref{fig:my_label}, se muestra una pantalla de una aplicación para contar las calorías de la comida mexicana. (Si la figura se mueve a la siguiente página, es NORMAL, no muevan nada!).
-\begin{figure}[!tbh]
+Las contribuciones y modificaciones arquitectónicas implementadas sobre el modelo original son las siguientes:
+\begin{itemize}
+    \item \textbf{Procesamiento por Espectrogramas (STFT):} El sistema fue adaptado para operar directamente sobre representaciones de tiempo-frecuencia (espectrogramas). 
+    \item \textbf{Preservación Estricta de la Fase y Modificación de Magnitud (Volumen):} El repositorio original de IDEAW presentaba un defecto crítico al modificar conjuntamente todo el espectro, lo que alteraba la fase acústica y generaba distorsiones audibles. El algoritmo fue reprogramado para desacoplar el espectrograma, de modo que la red incruste la marca de agua \textit{exclusivamente} alterando la magnitud (el componente de energía o "volumen"), mientras que la fase original se extrae, se reserva y se reinyecta intacta durante la reconstrucción del audio.
+    \item \textbf{Enfoque en Bajas Frecuencias (Bajos):} Se modificó el algoritmo de inserción para que la marca de agua se incruste única y selectivamente en la región de bajas frecuencias. Esto garantiza la supervivencia de la marca frente a compresores como el MP3, los cuales descartan agresivamente las altas frecuencias.
+    \item \textbf{Selección Específica de Bloques:} El modelo fue reconfigurado para procesar y marcar únicamente los bloques de audio deseados, optimizando la carga computacional y asegurando que la marca se inserte solo en regiones con suficiente energía acústica.
+    \item \textbf{Soporte para Canales Mono:} El pipeline original fue reprogramado para no limitarse a configuraciones estéreo, logrando operar nativamente con canales mono, lo que universaliza el sistema para todo tipo de formatos.
+\end{itemize}
+
+El entrenamiento de esta red adaptada incluye de forma intrínseca simulaciones de ruido y compresión. De este modo, el autoencoder aprende a extraer la marca de agua incluso cuando la señal ha sido degradada o atacada maliciosamente.
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{img/calorias1.png}
-    \caption{Aplicacion ``Mexican Food with Chilly'' \cite{Microsoft:Concepto}}
-    \label{fig:my_label}
+    \begin{tikzpicture}[node distance=2cm]
+        \node (start) [startstop] {Audio Original (.wav)};
+        \node (seg) [process, below of=start] {Segmentación en clips (5s)};
+        \node (dec1) [decision, below of=seg, yshift=-0.5cm] {¿Cumple 5s?};
+        \node (stop) [startstop, right of=dec1, xshift=2cm] {Descarte de residuo};
+        \node (framing) [process, below of=dec1, yshift=-1cm] {Framing (512) y Overlap (50\%)};
+        \node (stft) [process, below of=framing] {Transformada STFT};
+        \node (nn) [process, below of=stft] {Autoencoder Adaptado (IDEAW)};
+        \node (output) [startstop, below of=nn] {Audio Marcado / Extracción};
+
+        \draw [arrow] (start) -- (seg);
+        \draw [arrow] (seg) -- (dec1);
+        \draw [arrow] (dec1) -- node[anchor=south] {No} (stop);
+        \draw [arrow] (dec1) -- node[anchor=east] {Sí} (framing);
+        \draw [arrow] (framing) -- (stft);
+        \draw [arrow] (stft) -- (nn);
+        \draw [arrow] (nn) -- (output);
+    \end{tikzpicture}
+    \caption{Diagrama de flujo del proceso de preprocesamiento y marcado usando IDEAW adaptado.}
+    \label{fig:flujo_proceso}
 \end{figure}
-
-En la tabla \ref{tab:my_label}, se muestra una tabla con el listado de los mejores futbolistas del mundo mundial. 
-
-\begin{table}[!tbh]
-    \centering
-    \begin{tabular}{c|c} \hline
-         Estudiante &  Nacionalidad \\ \hline
-         Lionel Messi & Argentina  \\
-         Cristiano Ronaldo & Portuguesa  \\
-         Hector Hermoso Herrera & Mexicana \\ 
-         \hline \hline
-    \end{tabular}
-    \caption{Otro ejemplo de tabla}
-    \label{tab:my_label}
-\end{table}

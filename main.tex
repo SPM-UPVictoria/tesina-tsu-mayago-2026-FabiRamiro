@@ -3,7 +3,8 @@
 \usepackage{fancyhdr}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[spanish,mexico]{babel}
+\usepackage{babel}
+\babelprovide[main,import]{spanish}
 %\usepackage[letterpaper,margin=2.5cm]{geometry}
 \usepackage{setspace}
 \usepackage{titlesec}
@@ -13,6 +14,12 @@
 
 \usepackage[linguistics]{forest}
 \usepackage{amssymb, amsmath, amsbsy} % simbolitos
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
 
 
 \usepackage{xcolor}
@@ -26,6 +33,7 @@
 \usepackage{verbatim} % comentarios
 \usepackage{algpseudocode}
 \usepackage{algorithm}
+\usepackage{float}
 \usepackage{pdflscape}
 \usepackage{afterpage}
 \usepackage{array,booktabs,ragged2e}
@@ -41,6 +49,7 @@
 
 
 % Para utilizar el formato de citas IEEE y comentar los dos parrafos siguientes. Ademas de utilizar el comando \cite en vez de \cite
+\usepackage{csquotes}
 \usepackage[backend=biber,sorting=none]{biblatex}
 % Para utilizar el formato APA, sugiero comentar la linea anterior y descomentar las dos proximas lineas. Ademas de utilizar el comando \cite en vez de \cite
 %\usepackage[backend=biber,style=apa]{biblatex}
@@ -52,16 +61,18 @@
   \let\lbx@finalnamedelim=\lbx@es@smartand
   \let\lbx@finallistdelim=\lbx@es@smartand
 }
-\renewbibmacro*{name:delim:apa:family-given}[1]{%
-  \ifnumgreater{\value{listcount}}{\value{liststart}}
-    {\ifboolexpr{
-       test {\ifnumless{\value{listcount}}{\value{liststop}}}
-       or
-       test \ifmorenames
-     }
-       {\printdelim{multinamedelim}}
-       {\lbx@finalnamedelim{#1}}}
-    {}}
+\ifcsname abx@macro@name:delim:apa:family-given\endcsname
+  \renewbibmacro*{name:delim:apa:family-given}[1]{%
+    \ifnumgreater{\value{listcount}}{\value{liststart}}
+      {\ifboolexpr{
+         test {\ifnumless{\value{listcount}}{\value{liststop}}}
+         or
+         test \ifmorenames
+       }
+         {\printdelim{multinamedelim}}
+         {\lbx@finalnamedelim{#1}}}
+      {}}
+\fi
 \makeatother
 % Estas lineas permiten romper los hipervinculos muy largos en las referencias!!!!
 \setcounter{biburllcpenalty}{7000}
@@ -78,17 +89,17 @@
 
 
 % CONSTANTES NECESARIAS PARA EL DOCUMENTO ---> MODIFIQUEN A SU CRITERIO
-\newcommand{\NombreAlumno}{Michael Jackson Perez Black}
+\newcommand{\NombreAlumno}{Osvaldo Fabian Ramiro Balboa}
 \soulregister{\NombreAlumno}{1}
 % NUNCA PONGAN EL TITULO EN MAYUSCULAS!!
-\newcommand{\NombreProyecto}{Notificación de actualizaciones de la información en un sistema de información web de pacientes hospitalizados a sus familiares del Sagrado Corazón de Jesus } 
+\newcommand{\NombreProyecto}{Marcado de agua digital profundo y robusto en señales de audio} 
 % Noten los \\ para insertar un ENTER del texto en el encabezado. NUNCA PONGAN EL TITULO EN MAYUSCULAS!!
-\newcommand{\NombreProyectoheader}{Notificación de actualizaciones de la información \\en un sistema de información web de pacientes\\ hospitalizados a sus familiares del Sagrado Corazón de Jesus}
+\newcommand{\NombreProyectoheader}{Marcado de agua digital profundo\\ y robusto en señales de audio}
 \newcommand{\NombreTSU}{Desarrollo de Software Multiplataforma}
-\newcommand{\UnidadEconomica}{Departamento de Psiquiatría Homeopática, Hospital San Jose Bonaventura}
-\newcommand{\nasesorempresaria}   {Dr. Shawn Murphy}
+\newcommand{\UnidadEconomica}{CINVESTAV Unidad Tamaulipas}
+\newcommand{\nasesorempresaria}   {Dr. Jose Juan Garcia Hernandez}
 \newcommand{\nasesorinstitucional}{Dr. Said Polanco Martagón}
-\newcommand{\Matricula}           {1730505}  %SU MATRICULA
+\newcommand{\Matricula}           {2430098}  %SU MATRICULA
 \newcommand{\ncuatrimestre}{Mayo-Agosto 2026}
 % ESTA ES LA FECHA EN LA QUE EL ASESOR INSTITUCIONA EVALUA EL INFORME
 \newcommand{\fechaAutorizacionInforme}               {31 de Julio de 2026} 
@@ -104,10 +115,11 @@
 \newcommand{\AulaEvaluacionOEnlaceMeetPesentacion}{I-XXX69} %otras opciones: si es un elance de meet, rodearlo \url{}
 
 %\newcommand{\modalidadEvaluacionPesentacion}{Virtual} % Otras opciones: Virtual
-%\newcommand{\tipoAulaOficinaEnlacePesentacion}{el enlace} % Otras opciones: la oficia/el aula/el enlace
+%\newcommand{\tipoAulaOficinaEnlacePesentacion}{el enla ce} % Otras opciones: la oficia/el aula/el enlace
 %\newcommand{\AulaEvaluacionOEnlaceMeetPesentacion}{\url{http://www.upvictoria.edu.mx}} %otras opciones: si es un elance de meet, rodearlo \url{}
 
-\newcommand{\ncarrera}            {Ingeniería en Tecnologías de la Información e Innovación Digital}
+\newcommand{\ncarrera}            {Desarrollo de Software Multiplataforma}
+\newcommand{\ncarreraIng}            {Ingeniería en Tecnologías de la Información e Innovación Digital}
 
 
 \fancyhead{} % Clear all header fields
@@ -141,10 +153,9 @@
 \addto\captionsspanish{% Replace "english" with the language you use
   \renewcommand{\contentsname}%
     {Contenido temático}%
+  \renewcommand{\tablename}{Tabla}%
+  \renewcommand{\listtablename}{Índice de tablas}%
 }
-
-
-\renewcommand\spanishtablename{Tabla}
 
 \begin{document}
 
@@ -159,42 +170,42 @@
 \begin{titlepage}
 
 
-\vspace*{-2cm}
-\begin{center}
-\begin{tabular}{cp{6cm}c}
-\includegraphics[height=2.25cm]{UTYP.png} & 
-& \includegraphics[height=2.25cm]{LogoUPV_2023.png}   \\
-\end{tabular} \\[0.5cm]
+  \vspace*{-2cm}
+  \begin{center}
+    \begin{tabular}{cp{6cm}c}
+      \includegraphics[height=2.25cm]{UTYP.png} &
+                                                & \includegraphics[height=2.25cm]{LogoUPV_2023.png} \\
+    \end{tabular} \\[0.5cm]
 
 
 
-{\Large \textbf{UNIVERSIDAD POLITÉCNICA DE VICTORIA}}\\[1.0cm]
+    {\Large \textbf{UNIVERSIDAD POLITÉCNICA DE VICTORIA}}\\[1.0cm]
 
-{\Large \textbf{REPORTE DE ACTIVIDADES DEL PROYECTO}}\\[0.75cm]
+    {\Large \textbf{REPORTE DE ACTIVIDADES DEL PROYECTO}}\\[0.75cm]
 
-{\Large \MakeUppercase{\NombreProyecto}}\\[1.0cm]
+    {\Large \MakeUppercase{\NombreProyecto}}\\[1.0cm]
 
-QUE PRESENTA
+    QUE PRESENTA
 
-\textbf{\MakeUppercase{\NombreAlumno}}\\[1.0cm]
+    \textbf{\MakeUppercase{\NombreAlumno}}\\[1.0cm]
 
-EN CUMPLIMIENTO DE LA ESTADÍA TSU EN\\
-\textbf{\MakeUppercase{\NombreTSU}}\\[0.75cm]
+    EN CUMPLIMIENTO DE LA ESTADÍA TSU EN\\
+    \textbf{\MakeUppercase{\NombreTSU}}\\[0.75cm]
 
-ASESOR INSTITUCIONAL\\
-\textbf{\MakeUppercase{\nasesorinstitucional}}\\[0.5cm]
+    ASESOR INSTITUCIONAL\\
+    \textbf{\MakeUppercase{\nasesorinstitucional}}\\[0.5cm]
 
-UNIDAD ECONÓMICA RECEPTORA:\\
-\textbf{\MakeUppercase{\UnidadEconomica}}\\[0.5cm]
+    UNIDAD ECONÓMICA RECEPTORA:\\
+    \textbf{\MakeUppercase{\UnidadEconomica}}\\[0.5cm]
 
-ASESOR DE LA UNIDAD ECONÓMICA\\
-\textbf{\MakeUppercase{\nasesorempresaria}}\\[0.5cm]
+    ASESOR DE LA UNIDAD ECONÓMICA\\
+    \textbf{\MakeUppercase{\nasesorempresaria}}\\[0.5cm]
 
 
-\end{center}
-\begin{flushright}
-Ciudad Victoria, Tamaulipas, \fechaPortada.
-\end{flushright}
+  \end{center}
+  \begin{flushright}
+    Ciudad Victoria, Tamaulipas, \fechaPortada.
+  \end{flushright}
 
 \end{titlepage}
 
@@ -210,8 +221,8 @@ Ciudad Victoria, Tamaulipas, \fechaPortada.
 
 
 \begin{center}
-{\Large \textbf{Formato de autorización para exposición de Estadía de}}\\[0.125cm]
-{\Large \textbf{Técnico Superior Universitario}}\\[0.25cm]
+  {\Large \textbf{Formato de autorización para exposición de Estadía de}}\\[0.125cm]
+  {\Large \textbf{Técnico Superior Universitario}}\\[0.25cm]
 \end{center}
 
 \noindent
@@ -231,13 +242,13 @@ Sin otro particular, se le recomienda estar disponible para iniciar su exposici�
 \vspace{0.5cm}
 
 \begin{center}
-\begin{tabular}{p{10cm}}
-\multicolumn{1}{c}{Atentamente}   \\
- \\
- \\ \hline
-\multicolumn{1}{c}{\nasesorinstitucional}   \\
-\multicolumn{1}{c}{Asesor institucional}   \\
-\end{tabular}
+  \begin{tabular}{p{10cm}}
+    \multicolumn{1}{c}{Atentamente}           \\
+    \\
+    \\ \hline
+    \multicolumn{1}{c}{\nasesorinstitucional} \\
+    \multicolumn{1}{c}{Asesor institucional}  \\
+  \end{tabular}
 \end{center}
 
 \clearpage
@@ -246,19 +257,19 @@ Sin otro particular, se le recomienda estar disponible para iniciar su exposici�
 \vspace*{3cm}
 
 \begin{center}
-{\large \textbf{Control sumativo de Estadía para Técnico Superior Universitario}}
+  {\large \textbf{Control sumativo de Estadía para Técnico Superior Universitario}}
 \end{center}
 
 \vspace{0.5cm}
 
 \begin{center}
-\begin{tabular}{|p{6cm}|p{4cm}|p{4cm}|}
-\hline
-\textbf{Criterio} & \textbf{Valor / Ponderación} & \textbf{Calificación} \\ \hline
-Reporte & 60\% & \\ \hline
-Exposición & 40\% & \\ \hline
-Calificación final & \multicolumn{2}{c|}{ } \\ \hline
-\end{tabular}
+  \begin{tabular}{|p{6cm}|p{4cm}|p{4cm}|}
+    \hline
+    \textbf{Criterio}  & \textbf{Valor / Ponderación} & \textbf{Calificación} \\ \hline
+    Reporte            & 60\%                         &                       \\ \hline
+    Exposición         & 40\%                         &                       \\ \hline
+    Calificación final & \multicolumn{2}{c|}{ }                               \\ \hline
+  \end{tabular}
 \end{center}
 
 \vspace{0.8cm}
@@ -267,16 +278,16 @@ Calificación final & \multicolumn{2}{c|}{ } \\ \hline
 %\textbf{Nota:} para completar este documento deberá sustentar su decisión con base en las rúbricas oficiales de la institución diseñadas para cada evaluación.
 
 \begin{center}
-\begin{tabular}{|p{10cm}|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Datos de la evaluación sumativa}}\\
-\multicolumn{1}{|c|}{Fecha: \textbf{\DiaEvaluacionPesentacion}  / \textbf{\MesEvaluacionPesentacion} / \textbf{\AnhoEvaluacionPesentacion}} \\ \hline
-%\multicolumn{1}{c}{Atentamente}   \\
- \\
- \\ \hline
-\multicolumn{1}{c}{\nasesorinstitucional}   \\
-\multicolumn{1}{c}{Asesor institucional}   \\
-\end{tabular}
+  \begin{tabular}{|p{10cm}|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Datos de la evaluación sumativa}}                                                                              \\
+    \multicolumn{1}{|c|}{Fecha: \textbf{\DiaEvaluacionPesentacion}  / \textbf{\MesEvaluacionPesentacion} / \textbf{\AnhoEvaluacionPesentacion}} \\ \hline
+    %\multicolumn{1}{c}{Atentamente}   \\
+    \\
+    \\ \hline
+    \multicolumn{1}{c}{\nasesorinstitucional}                                                                                                   \\
+    \multicolumn{1}{c}{Asesor institucional}                                                                                                    \\
+  \end{tabular}
 \end{center}
 
 
@@ -311,11 +322,11 @@ Calificación final & \multicolumn{2}{c|}{ } \\ \hline
 El resumen es una representación condensada del contenido del documento. Su propósito es dar al lector un relato de las características principales del reporte. Su redacción es en tercera persona, en tiempo pasado, con escritura continua y sin tablas o imágenes. La extensión sugerida es no mayor a media página. Debe cumplir con las siguientes características:
 
 \begin{itemize}
-\item Se hace mención del nombre del proyecto como parte de la Estadía, el nombre de la unidad económica y su dirección completa.
-\item Se menciona el objetivo, meta, actividad o responsabilidad principal que se abordó.
-\item Se describe detalladamente la metodología desarrollada; tales como herramientas, materiales, equipos, cursos, softwares y conocimientos adquiridos en la universidad utilizados para alcanzar los objetivos empleados.
-\item Se describen detalladamente los resultados más importantes obtenidos.
-\item Se termina presentando conclusiones del trabajo.
+  \item Se hace mención del nombre del proyecto como parte de la Estadía, el nombre de la unidad económica y su dirección completa.
+  \item Se menciona el objetivo, meta, actividad o responsabilidad principal que se abordó.
+  \item Se describe detalladamente la metodología desarrollada; tales como herramientas, materiales, equipos, cursos, softwares y conocimientos adquiridos en la universidad utilizados para alcanzar los objetivos empleados.
+  \item Se describen detalladamente los resultados más importantes obtenidos.
+  \item Se termina presentando conclusiones del trabajo.
 \end{itemize}
 
 
@@ -343,6 +354,9 @@ Add your abstract here...
 
 \input{introduccion}
 
+\clearpage
+\input{marco_teorico}
+
 %\chapter{Metodología}
 \clearpage
 \input{metodologia}
@@ -360,11 +374,11 @@ Add your abstract here...
 
 \clearpage
 %\Urlmuskip=0mu plus 1mu\relax
-\addcontentsline{toc}{section}{Bibliografía} 
+\addcontentsline{toc}{section}{Bibliografía}
 \printbibliography
- 
+
 \clearpage
-\addcontentsline{toc}{section}{Anexos} 
+\addcontentsline{toc}{section}{Anexos}
 
 
 \thispagestyle{fancy}
@@ -390,75 +404,77 @@ Add your abstract here...
 \thispagestyle{fancy}
 \includepdf[pages={1}]{documentosDigitalizados/CartaLiberacion.pdf}
 
+% Pagina 4: Evidencias de los artículos del Estado del Arte
+\clearpage
+\thispagestyle{fancy}
+\includepdf[pages=-]{documentosDigitalizados/Evidencias_Estado_Arte.pdf}
+
 %\chapter*{Rúbrica para la Evaluación del Reporte de Estadía}
 \clearpage
 %\section*{Rúbrica para la Evaluación del Reporte de Estadía}
 \newcommand{\SizeFont}{\footnotesize}
 
 \begin{center}
-\large {\textbf{Rúbrica para la Evaluación del Reporte de Estadía}}
+  \large {\textbf{Rúbrica para la Evaluación del Reporte de Estadía}}
 
-\begin{sidewaystable}
-\begin{longtable}{|p{0.5cm}|p{13cm}|p{1.5cm}|p{3cm}|}
-\hline
-%Fecha y lugar en que se emite: \textbf{Ciudad Victoria, Tamaulipas, a \fechaAutorizacionInforme } \\[0.125cm]
-\multicolumn{4}{|l|}{Nombre completo del estudiante: \textbf{\NombreAlumno} }\\
-\multicolumn{4}{|l|}{Matrícula:  \textbf{\Matricula}}  \\
-\multicolumn{4}{|l|}{PERIODO: \ncuatrimestre } \\
-\multicolumn{4}{|l|}{Nombre del evaluador: \nasesorinstitucional} \\
-\multicolumn{4}{|l|}{ } \\
-\multicolumn{4}{|l|}{Firma del Evaluador: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  }\\
-\multicolumn{4}{|l|}{Calificación Final: \_\_\_ / 100} \\ \hline
-Valor & Características a cumplir & Puntos & Observaciones \\ \hline
-\SizeFont 6 & \SizeFont Resumen ejecutivo y abstract: Indica qué se realizó, cómo se realizó y qué se obtuvo. (una cuartilla en español e inglés) & & \\ \hline
-\SizeFont 6 & \SizeFont Contenido temático: Describe correctamente el contenido del documento & & \\ \hline
-\SizeFont 6 & \SizeFont Introducción: El informe cumple con introducir al lector de una manera atractiva el panorama general del trabajo realizado en la unidad económica.  & & \\ \hline
-\SizeFont 6 & \SizeFont Descripción de la unidad económica: Se redactan los detalles de los antecedentes del departamento, la empresa, giro, misión, visión, infraestructura, ubicación. & & \\\hline
-\SizeFont 6 & \SizeFont Objetivos operativos: Describen las acciones a cumplir mediante actividades establecidas por el asesor empresarial & & \\ \hline
-\SizeFont 24 & \SizeFont Metodología: Descripción a detalle de las etapas y procedimientos utilizados en el proyecto & & \\ \hline
-\SizeFont 18 & \SizeFont Resultados: Interpreta y analiza los resultados obtenidos durante su estadía. & & \\ \hline
-\SizeFont 12 & \SizeFont Conclusiones: Las conclusiones son claras y acordes con el objetivo esperado & & \\ \hline
-\SizeFont 6 & \SizeFont Bibliografía y anexos: Cita correctamente las fuentes de información utilizando un estilo de referencia; anexa cartas correspondientes & & \\ \hline
-\SizeFont 10 & \SizeFont Responsabilidad: Entregó el reporte en la fecha y hora señalada. Asistió al menos al 80\% de sus días de Estadía & & \\ \hline
-\end{longtable}
-\end{sidewaystable}
+  \begin{sidewaystable}
+    \begin{longtable}{|p{0.5cm}|p{13cm}|p{1.5cm}|p{3cm}|}
+      \hline
+      %Fecha y lugar en que se emite: \textbf{Ciudad Victoria, Tamaulipas, a \fechaAutorizacionInforme } \\[0.125cm]
+      \multicolumn{4}{|l|}{Nombre completo del estudiante: \textbf{\NombreAlumno} }                                                                                                                                      \\
+      \multicolumn{4}{|l|}{Matrícula:  \textbf{\Matricula}}                                                                                                                                                              \\
+      \multicolumn{4}{|l|}{PERIODO: \ncuatrimestre }                                                                                                                                                                     \\
+      \multicolumn{4}{|l|}{Nombre del evaluador: \nasesorinstitucional}                                                                                                                                                  \\
+      \multicolumn{4}{|l|}{ }                                                                                                                                                                                            \\
+      \multicolumn{4}{|l|}{Firma del Evaluador: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  }                                                                                                                      \\
+      \multicolumn{4}{|l|}{Calificación Final: \_\_\_ / 100}                                                                                                                                                             \\ \hline
+      Valor        & Características a cumplir                                                                                                                                                  & Puntos & Observaciones \\ \hline
+      \SizeFont 6  & \SizeFont Resumen ejecutivo y abstract: Indica qué se realizó, cómo se realizó y qué se obtuvo. (una cuartilla en español e inglés)                                        &        &               \\ \hline
+      \SizeFont 6  & \SizeFont Contenido temático: Describe correctamente el contenido del documento                                                                                            &        &               \\ \hline
+      \SizeFont 6  & \SizeFont Introducción: El informe cumple con introducir al lector de una manera atractiva el panorama general del trabajo realizado en la unidad económica.               &        &               \\ \hline
+      \SizeFont 6  & \SizeFont Descripción de la unidad económica: Se redactan los detalles de los antecedentes del departamento, la empresa, giro, misión, visión, infraestructura, ubicación. &        &               \\\hline
+      \SizeFont 6  & \SizeFont Objetivos operativos: Describen las acciones a cumplir mediante actividades establecidas por el asesor empresarial                                               &        &               \\ \hline
+      \SizeFont 24 & \SizeFont Metodología: Descripción a detalle de las etapas y procedimientos utilizados en el proyecto                                                                      &        &               \\ \hline
+      \SizeFont 18 & \SizeFont Resultados: Interpreta y analiza los resultados obtenidos durante su estadía.                                                                                    &        &               \\ \hline
+      \SizeFont 12 & \SizeFont Conclusiones: Las conclusiones son claras y acordes con el objetivo esperado                                                                                     &        &               \\ \hline
+      \SizeFont 6  & \SizeFont Bibliografía y anexos: Cita correctamente las fuentes de información utilizando un estilo de referencia; anexa cartas correspondientes                           &        &               \\ \hline
+      \SizeFont 10 & \SizeFont Responsabilidad: Entregó el reporte en la fecha y hora señalada. Asistió al menos al 80\% de sus días de Estadía                                                 &        &               \\ \hline
+    \end{longtable}
+  \end{sidewaystable}
 
 \end{center}
 
 %\chapter*{Rúbrica para Exposición}
 \clearpage
 \begin{center}
-\large {\textbf{Rúbrica para Exposición del Reporte de Estadía}}
+  \large {\textbf{Rúbrica para Exposición del Reporte de Estadía}}
 \end{center}
 
 
 \begin{longtable}{|p{3.75cm}|p{3.75cm}|p{3.75cm}|p{3.75cm}|}
-\hline
- & \multicolumn{3}{c|}{Nivel de logro} \\ \hline
-%A &B  & C & D \\
-Criterio &  Bueno ( 10\% ) & Regular (7\% ) & Menor a lo esperado (5\%) \\ \hline
-\SizeFont Dominio del tema (10\%) & \SizeFont Utiliza todos los términos y conceptos de manera correcta. & \SizeFont Utiliza la mayoría términos y conceptos de manera correcta & \SizeFont Confunde los términos y conceptos. \\ \hline
+  \hline
+                                                                     & \multicolumn{3}{c|}{Nivel de logro}                                                                                                                                                                                                                                                                                                                                                                                                                                              \\ \hline
+  %A &B  & C & D \\
+  Criterio                                                           & Bueno ( 10\% )                                                                                                                                                                                               & Regular (7\% )                                                                                                                                                                                          & Menor a lo esperado (5\%)                               \\ \hline
+  \SizeFont Dominio del tema (10\%)                                  & \SizeFont Utiliza todos los términos y conceptos de manera correcta.                                                                                                                                         & \SizeFont Utiliza la mayoría términos y conceptos de manera correcta                                                                                                                                    & \SizeFont Confunde los términos y conceptos.            \\ \hline
 
-\SizeFont  Presentación de material visual (10\%) & \SizeFont Las  diapositivas usadas tienen fondo claro, letras, tablas e imágenes visibles. La presentación contiene los aspectos relevantes de la Estadía
-& \SizeFont Las  diapositivas usadas presentan dificultad para su apreciación visual. La presentación contiene los aspectos relevantes de la Estadía & \SizeFont Las  diapositivas usadas presentan dificultad para su apreciación visual. La presentación carece de algunos aspectos relevantes de la Estadía. \\ \hline
+  \SizeFont  Presentación de material visual (10\%)                  & \SizeFont Las  diapositivas usadas tienen fondo claro, letras, tablas e imágenes visibles. La presentación contiene los aspectos relevantes de la Estadía
+                                                                     & \SizeFont Las  diapositivas usadas presentan dificultad para su apreciación visual. La presentación contiene los aspectos relevantes de la Estadía                                                           & \SizeFont Las  diapositivas usadas presentan dificultad para su apreciación visual. La presentación carece de algunos aspectos relevantes de la Estadía.                                                                                                          \\ \hline
 
-\SizeFont   Comunicación y expresión (10\%)  & \SizeFont   Su volumen de voz es comprensible. Su expresión corporal manifiesta seguridad ejecutiva. Su atuendo cumple los estándares de ser formal o semiformal.  Mantiene una línea de respeto en general. &  \SizeFont   Su volumen de voz no es comprensible. Su expresión corporal manifiesta inseguridad. Su atuendo cumple los estándares de ser formal o semiformal.  Mantiene una línea de respeto en general. &
-\SizeFont  Su volumen de voz no es comprensible. Su expresión corporal manifiesta inseguridad. Su atuendo no cumple los estándares de ser formal o semiformal.  Realiza alguna falta de respeto. \\ \hline
+  \SizeFont   Comunicación y expresión (10\%)                        & \SizeFont   Su volumen de voz es comprensible. Su expresión corporal manifiesta seguridad ejecutiva. Su atuendo cumple los estándares de ser formal o semiformal.  Mantiene una línea de respeto en general. & \SizeFont   Su volumen de voz no es comprensible. Su expresión corporal manifiesta inseguridad. Su atuendo cumple los estándares de ser formal o semiformal.  Mantiene una línea de respeto en general. &
+  \SizeFont  Su volumen de voz no es comprensible. Su expresión corporal manifiesta inseguridad. Su atuendo no cumple los estándares de ser formal o semiformal.  Realiza alguna falta de respeto.                                                                                                                                                                                                                                                                                                                                                      \\ \hline
 
-\SizeFont   Respuestas (10\%) & \SizeFont Las respuestas son consistentes y con parámetros de lógica operativa. & \SizeFont    Las respuestas no son consistentes pero tienen parámetros de lógica operativa. & \SizeFont    Las respuestas son difusas e incoherentes.  \\ \hline
-
-
-\multicolumn{2}{|c|}{\textbf{Ponderación final de su exposición:}} & \multicolumn{2}{c|}{\_\_\_ /100} \\ \hline
-%\multicolumn{2}{|c|}{Día / Mes / Año} &  \multicolumn{2}{c|}{\_\_\_\_ / \_\_\_\_\_\_\_\_ / \_\_\_\_  } \\  \hline
-\multicolumn{2}{|c|}{Día / Mes / Año} &  \multicolumn{2}{c|}{\DiaEvaluacionPesentacion / \MesEvaluacionPesentacion / \AnhoEvaluacionPesentacion} \\  \hline
-\multicolumn{2}{|c}{ }& \multicolumn{2}{|c|}{ }  \\
-\multicolumn{2}{|c}{ }& \multicolumn{2}{|c|}{ }  \\    
-\multicolumn{2}{|c}{Comentario adicional} & \multicolumn{2}{|c|}{ } \\  
-\multicolumn{2}{|c}{ }& \multicolumn{2}{|c|}{ }  \\  
-\multicolumn{2}{|c}{ }& \multicolumn{2}{|c|}{ }  \\  \hline
+  \SizeFont   Respuestas (10\%)                                      & \SizeFont Las respuestas son consistentes y con parámetros de lógica operativa.                                                                                                                              & \SizeFont    Las respuestas no son consistentes pero tienen parámetros de lógica operativa.                                                                                                             & \SizeFont    Las respuestas son difusas e incoherentes. \\ \hline
 
 
-
+  \multicolumn{2}{|c|}{\textbf{Ponderación final de su exposición:}} & \multicolumn{2}{c|}{\_\_\_ /100}                                                                                                                                                                                                                                                                                                                                                                                                                                                 \\ \hline
+  %\multicolumn{2}{|c|}{Día / Mes / Año} &  \multicolumn{2}{c|}{\_\_\_\_ / \_\_\_\_\_\_\_\_ / \_\_\_\_  } \\  \hline
+  \multicolumn{2}{|c|}{Día / Mes / Año}                              & \multicolumn{2}{c|}{\DiaEvaluacionPesentacion / \MesEvaluacionPesentacion / \AnhoEvaluacionPesentacion}                                                                                                                                                                                                                                                                                                                                                                          \\  \hline
+  \multicolumn{2}{|c}{ }                                             & \multicolumn{2}{|c|}{ }                                                                                                                                                                                                                                                                                                                                                                                                                                                          \\
+  \multicolumn{2}{|c}{ }                                             & \multicolumn{2}{|c|}{ }                                                                                                                                                                                                                                                                                                                                                                                                                                                          \\
+  \multicolumn{2}{|c}{Comentario adicional}                          & \multicolumn{2}{|c|}{ }                                                                                                                                                                                                                                                                                                                                                                                                                                                          \\
+  \multicolumn{2}{|c}{ }                                             & \multicolumn{2}{|c|}{ }                                                                                                                                                                                                                                                                                                                                                                                                                                                          \\
+  \multicolumn{2}{|c}{ }                                             & \multicolumn{2}{|c|}{ }                                                                                                                                                                                                                                                                                                                                                                                                                                                          \\  \hline
 \end{longtable}
 
 \end{document}
@@ -478,7 +494,7 @@ Criterio &  Bueno ( 10\% ) & Regular (7\% ) & Menor a lo esperado (5\%) \\ \hlin
 %\usepackage{array}
 
 \begin{center}
-\textbf{RÚBRICA PARA LA EVALUACIÓN DEL REPORTE DE ESTADÍA}
+  \textbf{RÚBRICA PARA LA EVALUACIÓN DEL REPORTE DE ESTADÍA}
 \end{center}
 
 \vspace{0.5cm}
@@ -501,56 +517,56 @@ Criterio &  Bueno ( 10\% ) & Regular (7\% ) & Menor a lo esperado (5\%) \\ \hlin
 \vspace{0.5cm}
 
 \begin{longtable}{|c|C{7cm}|c|C{4cm}|}
-\hline
-\textbf{Valor} & \textbf{Características a cumplir} & \textbf{Puntos obtenidos} & \textbf{Observaciones} \\
-\hline
-6 & Resumen ejecutivo y abstract: Indica qué se realizó, cómo se realizó y qué se obtuvo. (una cuartilla en español e inglés) & & \\
-\hline
-6 & Contenido temático: Describe correctamente el contenido del documento & & \\
-\hline
-6 & Introducción: El informe cumple con introducir al lector de una manera atractiva el panorama general del trabajo realizado en la unidad económica. & & \\
-\hline
-6 & Descripción de la unidad económica: Se redactan los detalles de los antecedentes del departamento, la empresa, giro, misión, visión, infraestructura, ubicación. & & \\
-\hline
-6 & Objetivos operativos: Describen las acciones a cumplir mediante actividades establecidas por el asesor empresarial & & \\
-\hline
-24 & Metodología: Descripción a detalle de las etapas y procedimientos utilizados en el proyecto & & \\
-\hline
-18 & Resultados: Interpreta y analiza los resultados obtenidos durante su estadía. & & \\
-\hline
-12 & Conclusiones: Las conclusiones son claras y acordes con el objetivo esperado & & \\
-\hline
-6 & Bibliografía y anexos: Cita correctamente las fuentes de información utilizando un estilo de referencia; anexa cartas correspondientes & & \\
-\hline
-10 & Responsabilidad: Entregó el reporte en la fecha y hora señalada. Asistió al menos al 80\% de sus días de Estadía & & \\
-\hline
+  \hline
+  \textbf{Valor} & \textbf{Características a cumplir}                                                                                                                               & \textbf{Puntos obtenidos} & \textbf{Observaciones} \\
+  \hline
+  6              & Resumen ejecutivo y abstract: Indica qué se realizó, cómo se realizó y qué se obtuvo. (una cuartilla en español e inglés)                                        &                           &                        \\
+  \hline
+  6              & Contenido temático: Describe correctamente el contenido del documento                                                                                            &                           &                        \\
+  \hline
+  6              & Introducción: El informe cumple con introducir al lector de una manera atractiva el panorama general del trabajo realizado en la unidad económica.               &                           &                        \\
+  \hline
+  6              & Descripción de la unidad económica: Se redactan los detalles de los antecedentes del departamento, la empresa, giro, misión, visión, infraestructura, ubicación. &                           &                        \\
+  \hline
+  6              & Objetivos operativos: Describen las acciones a cumplir mediante actividades establecidas por el asesor empresarial                                               &                           &                        \\
+  \hline
+  24             & Metodología: Descripción a detalle de las etapas y procedimientos utilizados en el proyecto                                                                      &                           &                        \\
+  \hline
+  18             & Resultados: Interpreta y analiza los resultados obtenidos durante su estadía.                                                                                    &                           &                        \\
+  \hline
+  12             & Conclusiones: Las conclusiones son claras y acordes con el objetivo esperado                                                                                     &                           &                        \\
+  \hline
+  6              & Bibliografía y anexos: Cita correctamente las fuentes de información utilizando un estilo de referencia; anexa cartas correspondientes                           &                           &                        \\
+  \hline
+  10             & Responsabilidad: Entregó el reporte en la fecha y hora señalada. Asistió al menos al 80\% de sus días de Estadía                                                 &                           &                        \\
+  \hline
 \end{longtable}
 
 %\vspace{1cm}
 
 \clearpage
 \begin{center}
-\textbf{RÚBRICA PARA EXPOSICIÓN DEL REPORTE DE ESTADÍAS}
+  \textbf{RÚBRICA PARA EXPOSICIÓN DEL REPORTE DE ESTADÍAS}
 \end{center}
 
 \begin{center}
-\textbf{Técnico Superior Universitario}
+  \textbf{Técnico Superior Universitario}
 \end{center}
 
 \vspace{0.5cm}
 \newcommand{\SizeFont}{\small}
 \begin{longtable}{|p{3cm}|p{4cm}|p{4cm}|p{4cm}|}
-\hline
-\textbf{Criterio} & \textbf{Bueno (10\%)} & \textbf{Regular (7\%)} & \textbf{Menor a lo esperado (5\%)} \\
-\hline
-Dominio del tema & Utiliza todos los términos y conceptos de manera correcta. & Utiliza la mayoría de los términos y conceptos de manera correcta. & Confunde los términos y conceptos. \\
-\hline
-Presentación de material visual & Las diapositivas tienen fondo claro, con elementos visibles y contienen aspectos relevantes. & Presentan dificultad visual pero incluyen aspectos relevantes. & Presentan dificultad visual y carecen de aspectos relevantes. \\
-\hline
-Comunicación y expresión & Voz comprensible, seguridad corporal, atuendo formal o semiformal y respeto. & Voz poco comprensible, inseguridad, pero mantiene formalidad. & Voz no comprensible, inseguridad, atuendo inadecuado o falta de respeto. \\
-\hline
-Respuestas & Respuestas consistentes con lógica operativa. & Respuestas poco consistentes pero con lógica. & Respuestas difusas e incoherentes. \\
-\hline
+  \hline
+  \textbf{Criterio}               & \textbf{Bueno (10\%)}                                                                        & \textbf{Regular (7\%)}                                             & \textbf{Menor a lo esperado (5\%)}                                       \\
+  \hline
+  Dominio del tema                & Utiliza todos los términos y conceptos de manera correcta.                                   & Utiliza la mayoría de los términos y conceptos de manera correcta. & Confunde los términos y conceptos.                                       \\
+  \hline
+  Presentación de material visual & Las diapositivas tienen fondo claro, con elementos visibles y contienen aspectos relevantes. & Presentan dificultad visual pero incluyen aspectos relevantes.     & Presentan dificultad visual y carecen de aspectos relevantes.            \\
+  \hline
+  Comunicación y expresión        & Voz comprensible, seguridad corporal, atuendo formal o semiformal y respeto.                 & Voz poco comprensible, inseguridad, pero mantiene formalidad.      & Voz no comprensible, inseguridad, atuendo inadecuado o falta de respeto. \\
+  \hline
+  Respuestas                      & Respuestas consistentes con lógica operativa.                                                & Respuestas poco consistentes pero con lógica.                      & Respuestas difusas e incoherentes.                                       \\
+  \hline
 \end{longtable}
 
 \vspace{0.5cm}

@@ -1,45 +1,141 @@
 \section{Introducción}
 \label{ch:introduccion}
 
-La introducción es la primera sección sustantiva de la tesis y tiene como propósito principal guiar al lector a través del contexto y la relevancia del estudio. En ella, se presenta el problema de investigación, se establecen los objetivos, se justifica la realización del trabajo y se delinean los alcances y limitaciones. Debe ser escrita de forma clara y concisa, capturando el interés del lector y proporcionando una visión general de lo que se abordará en los capítulos subsiguientes.
+La proliferación de plataformas de distribución de contenido digital y la democratización de las herramientas de edición multimedia han transformado radicalmente el panorama de la propiedad intelectual en el siglo XXI. En este contexto, el marcado de agua digital (\textit{digital watermarking}) se ha consolidado como una de las técnicas más relevantes para la protección y autenticación de contenidos multimedia, incluyendo imágenes, vídeo y señales de audio \cite{cox2007digital}. A diferencia del cifrado convencional, que protege el contenido durante su transmisión pero lo hace accesible una vez descifrado, el marcado de agua integra la información de protección directamente en el contenido mismo, de modo que dicha información permanece ligada al archivo independientemente de los procesos de copia o distribución a los que sea sometido.
+
+En el dominio específico de las señales de audio, el marcado de agua consiste en la inserción de un mensaje binario, denominado marca de agua (\textit{watermark}), dentro de una señal anfitriona (\textit{host signal}) de manera imperceptible para el sistema auditivo humano (HAS, por sus siglas en inglés). Esta incrustación debe resistir diversas manipulaciones que la señal puede sufrir durante su ciclo de vida normal, tales como compresión con pérdida (formato MP3 o AAC), conversión entre formatos, remuestreo, ecualización y adición de ruido ambiental \cite{arnold2000audio}. La capacidad de un sistema de marcado de agua para sobrevivir a estas transformaciones es lo que se denomina \textit{robustez}, y representa uno de los desafíos técnicos más complejos en el área.
+
+Durante las últimas dos décadas, las técnicas de marcado de agua para audio han evolucionado significativamente. Los métodos clásicos, basados en modificaciones en el dominio del tiempo o en el dominio de la frecuencia mediante transformadas matemáticas como la Transformada Discreta de Wavelet (DWT) o la Transformada de Fourier (DFT), ofrecían soluciones robustas para escenarios controlados. Sin embargo, su diseño manual de características (\textit{hand-crafted features}) los hace inherentemente limitados frente a ataques adaptativos o combinaciones complejas de procesamiento de señales \cite{boney1996digital}. El surgimiento y la madurez de las técnicas de aprendizaje profundo (\textit{Deep Learning}) ha abierto una nueva era en este campo, en la que los sistemas aprenden de forma automática, a partir de datos, las representaciones óptimas para esconder y recuperar la información oculta.
+
+El presente proyecto, desarrollado en el Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV) Unidad Tamaulipas, bajo la dirección del Dr. Jose Juan Garcia Hernandez, propone el desarrollo de un sistema de marcado de agua digital profundo y robusto en señales de audio. El sistema está fundamentado en arquitecturas de redes neuronales profundas, específicamente en modelos tipo Autoencoder y U-Net, que operan principalmente en el dominio tiempo-frecuencia a través de la Transformada de Fourier de Tiempo Corto (STFT). El objetivo central es lograr un equilibrio óptimo entre imperceptibilidad acústica y resistencia a ataques de procesamiento de señales no intencionales, tales como la compresión MP3 con diferentes tasas de bits, la adición de ruido blanco gaussiano y el filtrado pasa-bajos.
+
+Este trabajo adquiere especial relevancia ante el auge de las tecnologías generativas basadas en inteligencia artificial, como los modelos de síntesis de voz (\textit{text-to-speech}) y los modelos de clonación de voz (\textit{voice cloning}), que facilitan la creación y distribución de contenido de audio falso o no autorizado. En este escenario, un sistema robusto de marcado de agua profundo no solo tiene aplicaciones en la gestión de derechos digitales (DRM), sino también en la autenticación forense de contenidos y en la lucha activa contra la desinformación generada por inteligencia artificial.
 
 \subsection{Antecedentes}
 \label{sec:antecedentes}
 
-En esta sección, se presenta una revisión concisa y pertinente de investigaciones previas, literatura existente y el estado del arte relacionado con el tema de la tesis. El objetivo es situar el trabajo actual dentro del conocimiento acumulado, identificar vacíos en la investigación y demostrar la originalidad y la necesidad del estudio propuesto. Se deben citar adecuadamente las fuentes, mostrando cómo el trabajo se construye sobre cimientos previos o cómo aborda aspectos no resueltos.
+La historia del marcado de agua digital en audio puede dividirse en tres grandes etapas tecnológicas. La primera etapa, que abarca aproximadamente desde mediados de la década de 1990 hasta principios de los 2000, se caracterizó por el desarrollo de técnicas en el dominio del tiempo, como la modificación del bit menos significativo (LSB, \textit{Least Significant Bit}). En este paradigma, la marca de agua se inserta alterando los bits de menor peso de las muestras de audio, lo que resulta en una baja distorsión perceptible, pero también en una escasa robustez ante cualquier tipo de procesamiento digital \cite{arnold2000audio}.
+
+La segunda etapa corresponde al auge de los métodos en el dominio de la frecuencia, que aprovechan la estructura espectral de la señal de audio para esconder la marca en regiones donde el sistema auditivo humano es menos sensible. Técnicas como la expansión de espectro (\textit{spread spectrum}), propuesta por Boney et al. \cite{boney1996digital}, o el uso de la Transformada Discreta de Coseno (DCT) y la Transformada Discreta de Wavelet (DWT), permitieron mejorar considerablemente la robustez frente a compresión y filtrado. Paralelamente, el desarrollo de modelos psicoacústicos basados en el estándar MPEG (como el modelo psicoacústico de la norma ISO/IEC 11172-3) permitió identificar con mayor precisión las regiones de enmascaramiento, es decir, aquellas frecuencias y rangos temporales donde la energía añadida por la marca de agua resulta inaudible para el oyente humano.
+
+La tercera y más reciente etapa corresponde a la aplicación del aprendizaje profundo al problema del marcado de agua. El trabajo seminal de Zhu et al. \cite{zhu2018hidden}, denominado \textit{HiDDeN} (\textit{Hiding Data with Deep Networks}), demostró por primera vez la viabilidad de un sistema de marcado de agua de extremo a extremo (\textit{end-to-end}) para imágenes, en el que tanto el incrustador (\textit{encoder}) como el extractor (\textit{decoder}) son redes neuronales entrenadas conjuntamente, junto con una red adversaria que simula los ataques. Este paradigma fue posteriormente adaptado y ampliado al dominio del audio, dando lugar a una nueva generación de sistemas que superan en robustez e imperceptibilidad a los métodos tradicionales.
+\subsubsection{Antecedentes de la Empresa}
+\label{subsec:antecedentes_empresa}
+
+El Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV) es una institución pública de investigación científica y desarrollo tecnológico, adscrita al Instituto Politécnico Nacional (IPN). Fundado en 1961, el CINVESTAV es reconocido a nivel nacional e internacional como uno de los centros de investigación más importantes de América Latina, con contribuciones significativas en matemáticas, física, biología, ingeniería y ciencias computacionales.
+
+\textbf{Ubicación.} La Unidad Tamaulipas del CINVESTAV se encuentra ubicada en Ciudad Victoria, Tamaulipas, México, siendo una de las unidades regionales del CINVESTAV establecidas para fortalecer el desarrollo científico y tecnológico en el interior de la República.
+
+\textbf{Giro.} La Unidad Tamaulipas se dedica a la investigación científica básica y aplicada, así como a la formación de recursos humanos de posgrado de alto nivel (maestría y doctorado) en áreas de tecnologías de la información, procesamiento de señales y sistemas inteligentes.
+
+\textbf{Misión.} Realizar investigación científica y tecnológica de vanguardia, así como formar investigadores y técnicos de excelencia que contribuyan al desarrollo científico, tecnológico y social de México, generando conocimiento de frontera con impacto nacional e internacional.
+
+\textbf{Visión.} Consolidarse como un centro de investigación de clase mundial, reconocido por la calidad e impacto de sus contribuciones científicas en ciencias e ingeniería, y por la formación de recursos humanos capaces de enfrentar los retos tecnológicos del siglo XXI.
+
+\textbf{Infraestructura.} La Unidad Tamaulipas cuenta con laboratorios especializados en procesamiento de señales y sistemas inteligentes, equipados con estaciones de trabajo de alto rendimiento y unidades de procesamiento gráfico (GPU) para el entrenamiento de modelos de aprendizaje profundo. El laboratorio donde se desarrolla el presente proyecto dispone de acceso a servidores con GPU de alto rendimiento, infraestructura fundamental para el entrenamiento de redes neuronales profundas con grandes conjuntos de datos de audio. Adicionalmente, la unidad cuenta con acceso a repositorios especializados de datos y a una red académica de colaboración con otras instituciones nacionales e internacionales.
+
+El Dr. Jose Juan Garcia Hernandez, investigador titular de la Unidad Tamaulipas, lidera líneas de investigación en seguridad de la información y procesamiento de señales multimedia, en las cuales se enmarca el presente proyecto de estadía. Su experiencia en el área garantiza la dirección metodológica y científica del trabajo, asegurando que los resultados obtenidos sean pertinentes y de calidad académica.
+
+\subsubsection{Estado del Arte}
+\label{subsec:estado_del_arte}
+
+El campo del marcado de agua profundo en señales de audio ha evolucionado significativamente gracias al desarrollo de arquitecturas especializadas publicadas en revistas científicas de alto impacto. A continuación, se presenta un análisis de diez contribuciones relevantes y rigurosamente validadas del estado del arte.
+
+\textbf{Redes Neuronales, CNNs y Optimización.} El uso de Redes Neuronales se remonta a trabajos como los de Yang et al. \cite{Yang_2014}, quienes propusieron un esquema ciego y robusto combinando la Descomposición en Valores Singulares (SVD) con redes neuronales para mejorar la extracción de la marca, validando su efectividad frente a ataques de desincronización. Más recientemente, la inclusión de Redes Neuronales Convolucionales Profundas (CNN) ha cobrado gran relevancia; Patil y Shelke \cite{Patil_2023} propusieron un modelo de marcado en audio altamente efectivo basado en una CNN complementada con algoritmos de optimización para la selección de la ubicación de inserción, maximizando así la robustez y la imperceptibilidad. Este trabajo fue posteriormente extendido en el sistema AudioStamp \cite{Patil_2024}, donde se logró un proceso de protección de copyright de extremo a extremo que mejora las tasas de detección frente a procesamiento de señal convencional.
+
+\textbf{Redes Invertibles, IA Generativa y Seguridad en Blockchain.} Los últimos dos años han visto la integración de tecnologías emergentes en la protección de audio. Un trabajo destacado publicado recientemente \cite{AJCIS_2025} aborda el uso de Redes Neuronales Invertibles (INN), aprovechando sus transformaciones biyectivas para minimizar la distorsión del audio portador al recuperar exactamente la señal huésped. Por su parte, Li et al. \cite{Li_2025} desarrollaron el sistema RNPM, un modelo de multi-marcado guiado neuralmente para selección de regiones, acoplado con mecanismos de corrección de error altamente robustos para preservar el mensaje oculto. Así mismo, Pan \cite{Pan_2026} propuso un paradigma que fusiona modelos de \textit{Deep Learning} con sistemas \textit{Blockchain} (BIAW-DL-SA) con el objetivo de verificar la propiedad e identificar falsificaciones en música generada de forma automatizada por Inteligencia Artificial, introduciendo una capa criptográfica extra al marcado de agua.
+
+\textbf{Modelos Robustos Clásicos y Psicoacústicos.} Previo a la maduración del aprendizaje profundo, métodos imperceptibles y estables en el dominio tiempo y tiempo-frecuencia sentaron las bases metodológicas. Al-Haj \cite{Al_Haj_2014} formuló un algoritmo centrado puramente en la imperceptibilidad mediante transformaciones matemáticas clásicas con alta robustez. De igual forma, Khaldi y Boudraa \cite{Khaldi_2013} demostraron que la Descomposición Modal Empírica (EMD) permite separar la señal en Modos Funcionales Intrínsecos óptimos para incrustar información sin afectar la audibilidad. Nishimura \cite{Nishimura_2012} abordó un ángulo innovador explotando modelos de enmascaramiento espacial y ambisónicos, probando que la estereofonía tridimensional oculta mejor el ruido del marcado. Finalmente, Kanhe y Gnanasekaran \cite{Kanhe_2018} desarrollaron una técnica robusta de inserción de imágenes en audio basada en la transformada DCT-SVD, ofreciendo un fuerte esquema de validación comparativa.
+
+\subsubsection{Comparativa de Trabajos Relacionados}
+\label{subsec:comparativa_trabajos}
+
+A partir del estudio de los artículos científicos de revista expuestos anteriormente, es posible identificar la transición metodológica que la literatura ha seguido desde el uso de algoritmos matemáticos deterministas hacia modelos estocásticos basados en aprendizaje profundo. La Tabla~\ref{tab:comparativa_detallada} presenta una comparativa de estos 10 sistemas formales del estado del arte, destacando sus arquitecturas y metodologías principales.
+
+\begin{sidewaystable}
+    \centering
+    \scriptsize
+    \caption{Comparativa del estado del arte basado en 10 artículos de revista comprobables.}
+    \label{tab:comparativa_detallada}
+    \begin{tabular}{|L{2.2cm}|c|c|L{3cm}|L{2.5cm}|L{2cm}|}
+        \hline
+        \textbf{Sistema / Autores} & \textbf{A\~no} & \textbf{Revista (Journal)} & \textbf{Arquitectura/Técnica} & \textbf{Enfoque Principal} & \textbf{Diferencia vs. Propuesta} \\
+        \hline
+        Pan \cite{Pan_2026} & 2026 & Informatica & Deep Learning + Blockchain & Música por IA / Forgery & Usa validación descentralizada externa. \\
+        \hline
+        Patil et al. \cite{Patil_2024} & 2024 & Int. J. of Elec. and Comm. Eng. & CNN (AudioStamp) & Protección Integral & Propuesta usa U-Net con foco en fase. \\
+        \hline
+        Patil et al. \cite{Patil_2023} & 2023 & High-Confidence Computing & CNN + Alg. Optimización & Optimización espacial & Menos eficiente en extracción local. \\
+        \hline
+        Anon. \cite{AJCIS_2025} & 2025 & Acad. J. Computing \& Info Sci & Redes Invertibles (INN) & Reversibilidad perfecta & INNs requieren alta memoria de GPU. \\
+        \hline
+        Li et al. \cite{Li_2025} & 2025 & IEEE/ACM TASLP & Neural-Guided Embedding & Localización guiada & No optimizado para baja capacidad. \\
+        \hline
+        Yang et al. \cite{Yang_2014} & 2014 & Int. J. of Comp. Intel. Sys. & SVD + Neural Networks & Robustez ante cortes & Uso de NN solo para decodificación. \\
+        \hline
+        Al-Haj \cite{Al_Haj_2014} & 2014 & EURASIP Journal & Transformadas Híbridas & Alta Imperceptibilidad & Algoritmos sin Deep Learning. \\
+        \hline
+        Khaldi et al. \cite{Khaldi_2013} & 2013 & IEEE TASLP & Empiric Mode Decomposition & Análisis multi-resolución & Extracción basada en EMD. \\
+        \hline
+        Nishimura \cite{Nishimura_2012} & 2012 & IEEE TASLP & Enmascaramiento Espacial & Dominio espacial 3D & La propuesta usa espectro estéreo. \\
+        \hline
+        Kanhe y Gnanasekaran \cite{Kanhe_2018} & 2018 & EURASIP Journal & DCT-SVD Transform & Inserción de imagen en audio & Enfoque sin redes neuronales. \\
+        \hline
+        \textbf{Propuesta} & \textbf{2025} & \textbf{N/A (Desarrollo propio)} & \textbf{U-Net en dominio STFT} & \textbf{Robustez a MP3} & \textbf{Preservación de fase original.} \\
+        \hline
+    \end{tabular}
+\end{sidewaystable}
+
+\textbf{Conclusión del Estado del Arte.} El análisis de los trabajos publicados en revistas internacionales demuestra que las arquitecturas basadas en aprendizaje profundo (CNNs, GANs, INNs) han superado sustancialmente a los métodos estadísticos tradicionales en términos de extracción automatizada de características. Sin embargo, persisten dos desafíos fundamentales en el dominio del audio: primero, los métodos que operan puramente en el dominio temporal sufren gravemente bajo ataques que destruyen la fase de la señal, como la compresión MP3 a tasas inferiores a 128 kbps; segundo, las soluciones que abordan esta debilidad (como modelos psicoacústicos complejos o mecanismos de atención masivos) incrementan dramáticamente el costo y la complejidad computacional. La propuesta de este proyecto aborda esta brecha al incrustar la marca exclusivamente en las magnitudes de baja frecuencia del dominio STFT mediante una arquitectura U-Net eficiente. Al mantener la fase original inalterada, la propuesta busca maximizar la robustez ante la compresión MP3 con un alto ancho de banda ($\sim$32 bps), manteniendo un SNR superior a 30 dB, y sin requerir hardware de nivel industrial para su entrenamiento e inferencia, resolviendo así de forma directa las limitaciones de los enfoques listados en la Tabla~\ref{tab:comparativa_detallada}.
 
 \subsection{Definición del Problema}
 \label{sec:problema}
 
-Aquí se describe de manera clara y precisa el problema que la tesis busca resolver. Es fundamental articular el problema de forma que sea comprensible, relevante y factible de investigar. Esta sección debe responder a preguntas como: ¿Qué situación actual es insatisfactoria o genera una necesidad? ¿Qué aspectos de este problema no han sido abordados adecuadamente por investigaciones anteriores? La definición del problema puede ser formulada como una pregunta de investigación o una declaración clara de la brecha de conocimiento.
+El problema central que aborda este proyecto puede formularse de manera formal de la siguiente manera. Sea $x \in \mathbb{R}^T$ una señal de audio de longitud $T$ muestras y sea $m \in \{0,1\}^L$ un mensaje binario de $L$ bits que se desea incrustar en dicha señal. El objetivo de un sistema de marcado de agua es encontrar una función de incrustación $E: \mathbb{R}^T \times \{0,1\}^L \rightarrow \mathbb{R}^T$ y una función de extracción $D: \mathbb{R}^T \rightarrow \{0,1\}^L$ tales que se satisfagan simultáneamente las siguientes condiciones:
+
+\begin{itemize}
+    \item \textbf{Imperceptibilidad:} La señal marcada $\hat{x} = E(x, m)$ debe ser perceptualmente indistinguible de la señal original $x$. Formalmente, se requiere que la diferencia $\hat{x} - x$ permanezca por debajo del umbral de enmascaramiento psicoacústico del sistema auditivo humano en todo instante de tiempo.
+
+    \item \textbf{Robustez:} Sea $A(\hat{x})$ la señal resultante de aplicar un ataque de procesamiento $A$ (compresión, ruido, filtrado, etc.) sobre la señal marcada. Se requiere que el extractor sea capaz de recuperar el mensaje con una tasa de error de bit (BER) mínima: $D(A(\hat{x})) \approx m$.
+
+    \item \textbf{Capacidad:} La cantidad de información $L$ que se puede insertar por unidad de tiempo sin violar la condición de imperceptibilidad debe ser maximizada.
+\end{itemize}
+
+Estas tres condiciones forman un triángulo de compromiso (\textit{trade-off triangle}) intrínsecamente conflictivo \cite{cox2007digital}: aumentar la capacidad tiende a degradar la imperceptibilidad; aumentar la robustez requiere insertar la marca con mayor energía, lo que también compromete la imperceptibilidad. Resolver este compromiso de forma eficiente es, precisamente, el reto fundamental del área.
+
+En el contexto específico de este trabajo, el problema se agudiza porque los sistemas distribuidos de contenido digital (plataformas de \textit{streaming}, redes sociales, servicios de nube) aplican de forma rutinaria una o más de las siguientes transformaciones a los archivos de audio antes de que lleguen al usuario final: transcodificación a MP3 o AAC con tasas de bits entre 64 y 192 kbps, normalización de volumen, recorte de frecuencias superiores a cierto umbral, y mezcla con otras fuentes de audio. Cada uno de estos procesos puede destruir parcial o totalmente la información oculta en una marca de agua convencional.
+
+El problema que se plantea resolver es, por tanto, el siguiente: \textit{¿Es posible diseñar y entrenar una red neuronal profunda que aprenda automáticamente a incrustar una marca de agua en las frecuencias bajas de la representación espectral (espectrograma) de una señal de audio, preservando intacta la fase original, de tal forma que la marca sobreviva a las transformaciones de procesamiento de señales más comunes en entornos de distribución digital, manteniendo al mismo tiempo una calidad perceptual equivalente a la del audio original?}
+
+La hipótesis de trabajo es afirmativa: al entrenar un modelo de tipo U-Net o Autoencoder convolucional en el dominio del espectrograma STFT para modificar únicamente las magnitudes de baja frecuencia, manteniendo la fase original sin procesar, y con una capa de ruido diferenciable que simule los ataques de interés durante el entrenamiento, la red puede aprender representaciones del mensaje inherentemente robustas a dichas transformaciones, sin necesidad de un diseño manual de características.
 
 \subsection{Objetivos}
 \label{sec:objetivos}
 
-Los objetivos son las metas que se esperan alcanzar con la realización de la investigación. Deben ser claros, medibles, alcanzables, relevantes y con un tiempo definido (SMART, por sus siglas en inglés). Se dividen en un objetivo general y varios objetivos específicos.
-
 \subsubsection{Objetivo General}
-\label{subsec:objetivo_general}
+\label{subsec:objective_general}
 
-El objetivo general expresa el propósito fundamental del estudio en términos amplios. Es la meta principal que se busca lograr y generalmente abarca la totalidad de la investigación. Debe ser coherente con la definición del problema.
-\begin{itemize}
-    \item \textbf{Ejemplo:} Desarrollar un sistema automatizado para la detección temprana de fallas en turbinas eólicas utilizando técnicas de aprendizaje automático.
-\end{itemize}
+Desarrollar un sistema de marcado de audio digital basado en redes neuronales profundas, robusto a ataques de procesamiento de señales no intencionales, que garantice un equilibrio entre imperceptibilidad acústica, capacidad de carga y confiabilidad en la extracción de la marca de agua.
 
 \subsubsection{Objetivos Específicos}
 \label{subsec:objetivos_especificos}
 
-Los objetivos específicos detallan los pasos o las acciones concretas que se llevarán a cabo para alcanzar el objetivo general. Son tareas más pequeñas y desglosadas que, al ser cumplidas, permiten la consecución del objetivo principal.
 \begin{itemize}
-    \item \textbf{Ejemplo 1:} Recopilar y preprocesar un conjunto de datos de vibraciones y parámetros operativos de turbinas eólicas.
-    \item \textbf{Ejemplo 2:} Implementar y evaluar diferentes algoritmos de aprendizaje automático para la clasificación de estados operativos (normal, pre-falla, falla).
-    \item \textbf{Ejemplo 3:} Diseñar una interfaz de usuario para la visualización de alertas y el monitoreo en tiempo real del estado de las turbinas.
+    \item Realizar una investigación exhaustiva del estado del arte en técnicas de marcado de agua profundo en audio, identificando las arquitecturas, dominios de operación y estrategias de robustez más efectivas.
+    \item Diseñar e implementar una arquitectura de red neuronal de extremo a extremo (Autoencoder convolucional o U-Net) que opere en el dominio espectral (STFT), integrando una capa diferenciable de simulación de ataques durante el entrenamiento.
+    \item Preprocesar y segmentar un conjunto de datos diverso de señales de audio (voz, música y sonidos ambientales) para generar un conjunto de entrenamiento y evaluación estandarizado.
+    \item Evaluar el rendimiento del sistema mediante métricas objetivas de calidad perceptual (SNR, ODG/PEAQ) y de robustez (BER), comparando los resultados frente a los sistemas del estado del arte reportados en la literatura.
+    \item Analizar el comportamiento del sistema ante diferentes niveles de intensidad de los ataques, con el fin de establecer los límites operativos del prototipo desarrollado.
 \end{itemize}
 
 \subsection{Justificación}
 \label{sec:justificacion}
 
-La justificación explica por qué es importante y relevante llevar a cabo la investigación. Se deben argumentar los beneficios y la utilidad del estudio desde diferentes perspectivas: teórica, práctica, social, económica, tecnológica, etc. Responde a la pregunta: ¿Por qué vale la pena invertir tiempo y recursos en esta investigación? Aquí se resaltan los aportes que la tesis generará al campo del conocimiento o a la solución de problemas específicos.
+La relevancia de este proyecto se sustenta en tres dimensiones complementarias. Desde el punto de vista técnico-científico, el marcado de agua profundo en audio es un problema abierto con múltiples brechas sin resolver, tal como lo evidencia el análisis del estado del arte presentado en la sección anterior y el \textit{benchmark} \textit{AudioMarkBench} \cite{liu2024audiomarkbench}. Ningún sistema actual logra robustez simultánea ante todos los tipos de ataques con bajo costo computacional, lo que hace del presente proyecto una contribución pertinente al avance del conocimiento en el área.
+
+Desde el punto de vista de aplicación industrial, la creciente producción de contenido de audio generado por inteligencia artificial —incluyendo \textit{podcasts} sintéticos, audiolibros generados, clonación de voz y música compuesta por IA— crea una demanda urgente de mecanismos de autenticación que permitan rastrear el origen de los contenidos y detectar usos no autorizados. Sistemas como \textit{AudioSeal} de Meta AI \cite{sanroman2024audioseal} ya están siendo considerados para su integración en plataformas comerciales, lo que demuestra la madurez y la viabilidad comercial de esta línea de investigación.
+
+Finalmente, desde el punto de vista formativo, el desarrollo de este sistema implica la integración de conocimientos de procesamiento digital de señales, aprendizaje profundo, programación en Python y evaluación experimental rigurosa, lo que constituye una experiencia integral para la formación en el área de Desarrollo de Software Multiplataforma con énfasis en inteligencia artificial.
 
 \subsection{Alcances y Limitaciones}
 \label{sec:alcances_limitaciones}
@@ -47,66 +143,19 @@ La justificación explica por qué es importante y relevante llevar a cabo la in
 \subsubsection{Alcances}
 \label{subsec:alcances}
 
-Los alcances definen claramente hasta dónde llegará el estudio, qué aspectos cubrirá y cuáles serán sus fronteras. Establecen qué elementos, variables, poblaciones o contextos serán incluidos en la investigación. Es esencial para evitar expectativas irrealistas y para mantener el enfoque del trabajo.
+\begin{itemize}
+    \item Desarrollo de un prototipo funcional en Python utilizando librerías de alto nivel como PyTorch, librosa y numpy, con código documentado y reproducible.
+    \item Entrenamiento del modelo con un conjunto de datos diverso que incluya voz, música y sonidos ambientales, utilizando un subconjunto del corpus MUSDB18 o conjuntos de datos de dominio público.
+    \item Evaluación sistemática del sistema bajo ataques de compresión MP3 (a 128 kbps y 64 kbps), ruido blanco gaussiano (SNR de 20 dB y 10 dB) y filtrado pasa-bajos (frecuencia de corte de 8 kHz).
+    \item Comparación cuantitativa de los resultados con los valores reportados por sistemas del estado del arte como \textit{WavMark} \cite{chen2023wavmark} y \textit{SilentCipher} \cite{singh2024silentcipher}.
+\end{itemize}
 
 \subsubsection{Limitaciones}
 \label{subsec:limitaciones}
 
-Las limitaciones son los factores externos o internos que podrían restringir la validez, generalización o profundidad de los resultados de la investigación. Es importante identificarlas honestamente, ya que demuestran un pensamiento crítico por parte del investigador. Pueden incluir restricciones de tiempo, recursos, acceso a datos, metodológicas, etc.
-
-\subsection{Ejemplos de Tablas e Inclusión de Imágenes}
-\label{sec:ejemplos_elementos}
-
-Para ilustrar el uso de elementos visuales en su tesis, a continuación se presentan ejemplos básicos de cómo incluir tablas e imágenes en LaTeX.
-
-\subsubsection{Inclusión de Tablas}
-
-Las tablas son herramientas fundamentales para presentar datos de manera organizada y comprensible.
-\begin{table}[H]
-    \centering
-    \caption{Clasificación de Sensores Comunes en Ingeniería.}
-    \label{tab:sensores_comunes}
-    \begin{tabular}{|l|c|c|}
-        \hline
-        \textbf{Tipo de Sensor} & \textbf{Magnitud Medida} & \textbf{Principio de Funcionamiento} \\
-        \hline
-        Termopar & Temperatura & Efecto Seebeck \\
-        Extensómetro & Deformación & Resistencia eléctrica \\
-        Acelerómetro & Aceleración & Efecto piezoeléctrico \\
-        Encoder rotatorio & Posición angular & Óptico/Magnético \\
-        \hline
-    \end{tabular}
-    \caption*{Nota: Esta tabla es un ejemplo para demostrar la estructura básica de una tabla en LaTeX.}
-\end{table}
-Como se puede observar en la Tabla \ref{tab:sensores_comunes}, la información se presenta de forma clara y estructurada. Es importante añadir un \verb|`\caption`|  para describir la tabla y un  \verb|`\label`|  para referenciarla en el texto.
-
-\subsubsection{Inclusión de Imágenes}
-
-Las imágenes, gráficos o diagramas son cruciales para complementar la explicación textual y facilitar la comprensión de conceptos complejos o resultados visuales.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{img/diagrama_proceso}
-    \caption{Diagrama de un proceso de control automático.}
-    \label{fig:diagrama_control}
-\end{figure}
-% La Figura \ref{fig:diagrama_control} ilustra un ejemplo de un diagrama de un proceso de control. Para incluir una imagen, se utiliza el entorno `figure` y el comando `\includegraphics`. Es fundamental especificar la ruta de la imagen (en este caso, `images/diagrama_proceso.png`) y un `width` para controlar su tamaño. Al igual que con las tablas, un `\caption` y un `\label` son indispensables. Es crucial que cada imagen tenga una calidad adecuada y que sea relevante para el texto.
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{img/grafico_datos1}
-        \caption{Datos de Temperatura.}
-        \label{fig:subfig_temp}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{img/grafico_datos2}
-        \caption{Datos de Presión.}
-        \label{fig:subfig_pres}
-    \end{subfigure}
-    \caption{Comparación de datos operativos de un sistema (Temperatura vs. Presión).}
-    \label{fig:comparacion_datos}
-\end{figure}
-Incluso es posible combinar varias imágenes en una sola figura, como se muestra en la Figura \ref{fig:comparacion_datos}, utilizando el paquete `subcaption`.
-
-Asegúrense de que todas las figuras y tablas estén debidamente referenciadas en el texto y que su contenido sea autoexplicativo, utilizando los pies de figura y títulos de tabla de manera efectiva.
+\begin{itemize}
+    \item El sistema requiere hardware especializado (GPU con soporte CUDA) para un entrenamiento eficiente; el entrenamiento en CPU resulta inviable en tiempos razonables.
+    \item La robustez contra ataques maliciosos diseñados específicamente para burlar la red (ataques adversariales) está fuera del alcance de este proyecto y constituye una línea de trabajo futuro.
+    \item El procesamiento en tiempo real no es un requisito del prototipo y dependerá de la optimización del modelo final en versiones futuras.
+    \item La evaluación se limita a los ataques especificados; la generalización a otros tipos de ataques no evaluados durante el entrenamiento no está garantizada.
+\end{itemize}
