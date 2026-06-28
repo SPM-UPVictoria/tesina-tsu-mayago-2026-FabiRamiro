@@ -1,7 +1,9 @@
-\section{Metodología}
+\section{Propuesta de Solución y Metodología}
 \label{ch:metodologia}
 
-La metodología de este proyecto se divide en etapas secuenciales que permiten transformar las señales de audio originales en datos aptos para el entrenamiento y evaluación de modelos de aprendizaje profundo. Cada etapa está diseñada para garantizar la integridad de los datos y la robustez del sistema de marcado de agua.
+La propuesta de solución para este proyecto consiste en el diseño y entrenamiento de una arquitectura de red neuronal profunda tipo U-Net que opera en el dominio tiempo-frecuencia (STFT) para incrustar marcas de agua digitales en señales de audio. A diferencia de los métodos algorítmicos clásicos o las redes puramente temporales, la arquitectura propuesta preserva íntegramente la fase original de la señal acústica, alterando exclusivamente las magnitudes espectrales. Esta estrategia de solución garantiza simultáneamente una alta imperceptibilidad auditiva y una robustez excepcional ante ataques destructivos severos, como la compresión con pérdida (MP3) a altas tasas.
+
+Para materializar y evaluar esta propuesta, la metodología se divide en etapas secuenciales que permiten transformar las señales de audio en representaciones tensoriales aptas para el aprendizaje profundo. Cada etapa está diseñada para garantizar la integridad de los datos y la viabilidad del entrenamiento.
 
 \subsection{Etapa 1: Segmentación del Audio (Preprocesamiento)}
 \label{sec:etapa1_segmentacion}
@@ -25,16 +27,21 @@ Para analizar la señal bajo la suposición de que es cuasi-estacionaria, se apl
     \item \textbf{Importancia:} El solapamiento es crucial para evitar la pérdida de información en los bordes de los bloques tras la aplicación de funciones de ventana (como Hamming o Hann) y para garantizar una reconstrucción suave de la señal (\textit{Constant Overlap-Add}, COLA) tras el proceso de marcado.
 \end{itemize}
 
-\subsection{Etapa 3: Diseño e Implementación de la Red Neuronal Profunda}
+\subsection{Etapa 3: Adaptación e Implementación de la Arquitectura IDEAW}
 \label{sec:etapa3_diseno_red}
 
-En esta fase se diseña la arquitectura del modelo que realizará la inserción y extracción de la marca de agua.
+En esta fase se estableció la arquitectura del modelo que realiza la inserción y extracción de la marca de agua. Como punto de partida para el autoencoder y el flujo de entrenamiento, se empleó el código base del proyecto \textit{IDEAW} \cite{li2024ideaw}, proveniente de la revisión del estado del arte. No obstante, el repositorio original fue sometido a modificaciones sustanciales por parte del autor para cumplir con los objetivos específicos de esta tesina.
 
+Las contribuciones y modificaciones arquitectónicas implementadas sobre el modelo original son las siguientes:
 \begin{itemize}
-    \item \textbf{Arquitectura:} Se exploran modelos basados en Autoencoders convolucionales y U-Net, que han demostrado alta eficacia en tareas de procesamiento de audio y restauración de señales.
-    \item \textbf{Dominio de Operación:} El modelo opera predominantemente en el dominio espectral (mediante la STFT) para aprovechar las propiedades psicoacústicas del oído humano, permitiendo que la marca de agua se oculte en frecuencias donde es menos perceptible pero más robusta.
-    \item \textbf{Entrenamiento:} Se incorpora una capa de ruido simulado durante el entrenamiento para forzar al modelo a aprender representaciones robustas frente a ataques como la compresión MP3 y el ruido blanco.
+    \item \textbf{Procesamiento por Espectrogramas (STFT):} El sistema fue adaptado para operar directamente sobre representaciones de tiempo-frecuencia (espectrogramas). 
+    \item \textbf{Preservación Estricta de la Fase y Modificación de Magnitud (Volumen):} El repositorio original de IDEAW presentaba un defecto crítico al modificar conjuntamente todo el espectro, lo que alteraba la fase acústica y generaba distorsiones audibles. El algoritmo fue reprogramado para desacoplar el espectrograma, de modo que la red incruste la marca de agua \textit{exclusivamente} alterando la magnitud (el componente de energía o "volumen"), mientras que la fase original se extrae, se reserva y se reinyecta intacta durante la reconstrucción del audio.
+    \item \textbf{Enfoque en Bajas Frecuencias (Bajos):} Se modificó el algoritmo de inserción para que la marca de agua se incruste única y selectivamente en la región de bajas frecuencias. Esto garantiza la supervivencia de la marca frente a compresores como el MP3, los cuales descartan agresivamente las altas frecuencias.
+    \item \textbf{Selección Específica de Bloques:} El modelo fue reconfigurado para procesar y marcar únicamente los bloques de audio deseados, optimizando la carga computacional y asegurando que la marca se inserte solo en regiones con suficiente energía acústica.
+    \item \textbf{Soporte para Canales Mono:} El pipeline original fue reprogramado para no limitarse a configuraciones estéreo, logrando operar nativamente con canales mono, lo que universaliza el sistema para todo tipo de formatos.
 \end{itemize}
+
+El entrenamiento de esta red adaptada incluye de forma intrínseca simulaciones de ruido y compresión. De este modo, el autoencoder aprende a extraer la marca de agua incluso cuando la señal ha sido degradada o atacada maliciosamente.
 
 \begin{figure}[H]
     \centering
@@ -45,7 +52,7 @@ En esta fase se diseña la arquitectura del modelo que realizará la inserción 
         \node (stop) [startstop, right of=dec1, xshift=2cm] {Descarte de residuo};
         \node (framing) [process, below of=dec1, yshift=-1cm] {Framing (512) y Overlap (50\%)};
         \node (stft) [process, below of=framing] {Transformada STFT};
-        \node (nn) [process, below of=stft] {Red Neuronal (U-Net/CNN)};
+        \node (nn) [process, below of=stft] {Autoencoder Adaptado (IDEAW)};
         \node (output) [startstop, below of=nn] {Audio Marcado / Extracción};
 
         \draw [arrow] (start) -- (seg);
@@ -56,6 +63,6 @@ En esta fase se diseña la arquitectura del modelo que realizará la inserción 
         \draw [arrow] (stft) -- (nn);
         \draw [arrow] (nn) -- (output);
     \end{tikzpicture}
-    \caption{Diagrama de flujo del proceso de preprocesamiento y marcado de audio.}
+    \caption{Diagrama de flujo del proceso de preprocesamiento y marcado usando IDEAW adaptado.}
     \label{fig:flujo_proceso}
 \end{figure}
